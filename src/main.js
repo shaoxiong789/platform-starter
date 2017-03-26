@@ -6,6 +6,11 @@ import router from './router.js'
 Vue.use(ElementUI)
 new Vue({
   el: '#app',
+  data(){
+    return {
+      title:''
+    }
+  },
   render: h => h(App),
   router:router(Vue)
 })
