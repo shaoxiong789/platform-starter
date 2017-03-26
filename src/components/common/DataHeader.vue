@@ -21,7 +21,7 @@
               </span>
                 <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item class="menu__item">
-                        <router-link class="login" :to="{ path: 'login' }">退出</router-link>
+                        <router-link class="login" :to="{ path: '/login' }">退出</router-link>
                       </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>

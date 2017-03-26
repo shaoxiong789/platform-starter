@@ -5,6 +5,7 @@ import Login from './views/login.vue'
 import Main from './views/main.vue'
 import menus from './menu.js'
 var menuRouter = [];
+sessionStorage.setItem('accessToken','这是测试token')
 const loginVerify = (to, from, next) => {
   if (!sessionStorage.getItem('accessToken')) {
     next({
