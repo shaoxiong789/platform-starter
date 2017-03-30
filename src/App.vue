@@ -1,3 +1,9 @@
+<template >
+  <div id="app">
+      <router-view></router-view>
+  </div>
+</template >
+
 <style>
   html,
   body {
@@ -10,9 +16,3 @@
     text-decoration: none;
   }
 </style>
-
-<template >
-  <div id="app">
-      <router-view></router-view>
-  </div>
-</template >

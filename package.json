@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "element-ui": "^1.1.2",
+    "moment": "^2.18.1",
     "vue": "^2.1.8",
+    "vue-fullcalendar": "^1.0.9",
     "vue-router": "^2.3.0"
   },
   "engines": {

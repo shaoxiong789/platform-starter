@@ -1,3 +1,32 @@
+<template>
+
+<el-col>
+    <el-collapse v-model="activeNames">
+        <el-collapse-item v-for="(menu,index) in menus" :title="menu.name" :name="index">
+            <ul class="el-menu-itms">
+                <router-link v-for="menuitem in menu.child" :to="{ path: '/'+menuitem.path }">
+                    <li class="el-menu-item"><i :class="menuitem.icon"></i>{{menuitem.name}}</li>
+                </router-link>
+            </ul>
+        </el-collapse-item>
+    </el-collapse>
+
+</el-col>
+
+</template>
+
+<script>
+import meuns from '../../menu.js'
+export default {
+    data() {
+        return {
+            activeNames: ['1'],
+            menus:meuns
+        };
+    }
+}
+
+</script>
 <style>
   .el-menu-item{
       list-style-type: none;
@@ -33,33 +62,3 @@
     margin-right: 20px;
   }
 </style>
-
-<template>
-
-<el-col>
-    <el-collapse v-model="activeNames">
-        <el-collapse-item v-for="(menu,index) in menus" :title="menu.name" :name="index">
-            <ul class="el-menu-itms">
-                <router-link v-for="menuitem in menu.child" :to="{ path: '/'+menuitem.path }">
-                    <li class="el-menu-item"><i class="el-icon-setting"></i>{{menuitem.name}}</li>
-                </router-link>
-            </ul>
-        </el-collapse-item>
-    </el-collapse>
-
-</el-col>
-
-</template>
-
-<script>
-import meuns from '../../menu.js'
-export default {
-    data() {
-        return {
-            activeNames: ['1'],
-            menus:meuns
-        };
-    }
-}
-
-</script>
