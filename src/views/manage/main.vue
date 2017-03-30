@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import DataHeader from '../components/common/DataHeader.vue'
-import SideNav from '../components/common/SideNav.vue'
-import Nothing from '../components/common/Nothing.vue'
+import DataHeader from '../../components/common/DataHeader.vue'
+import SideNav from '../../components/common/SideNav.vue'
+import Nothing from '../../components/common/Nothing.vue'
 export default {
   name: 'app',
   data () {

@@ -1,22 +1,78 @@
-import weixinMenu from './views/main/weixin/menu.vue'
-import subscribe from './views/main/weixin/subscribe.vue'
+import weixinMenu from './views/manage/menu.vue'
+import subscribe from './views/manage/subscribe.vue'
+import daySign from './views/manage/daySign/daySign.vue'
+import dsTemplate from './views/manage/daySign/dsTemplate.vue'
+import dsSetting from './views/manage/daySign/dsSetting.vue'
+import dsUploadBg from './views/manage/daySign/dsUploadBg.vue'
+import dsSetWord from './views/manage/daySign/dsSetWord.vue'
+import dataAnalyse from './views/manage/dataManage/analyse.vue'
+import dataExport from './views/manage/dataManage/export.vue'
+
+
 const menus = [
   {
+    name:"日签管理",
+    child:[
+      {
+        name:'日签管理',
+        path:"manage/daysign/",
+        icon:'el-icon-picture',
+        component:daySign
+      },{
+        name:'上传日签背景',
+        path:"manage/daysign/uploadbg",
+        icon:'el-icon-upload',
+        component:dsUploadBg
+      },{
+        name:'设置每日一句',
+        path:"manage/daysign/setword",
+        icon:'el-icon-setting',
+        component:dsSetWord
+      },{
+        name:'时间设置',
+        path:"manage/daysign/setting",
+        icon:'el-icon-time',
+        component:dsSetting
+      },
+      {
+        name:'模板管理',
+        path:"manage/daysign/template",
+        icon:'el-icon-document',
+        component:dsTemplate
+      }
+    ]
+  },{
+    name:"用户数据管理",
+    child:[
+      {
+        name:'数据分析',
+        path:"manage/datamanage/analyse",
+        icon:'el-icon-time',
+        component:dataAnalyse
+      },{
+        name:'数据导出',
+        path:"manage/datamanage/export",
+        icon:'el-icon-setting',
+        component:dataExport
+      }
+    ]
+  },{
     name:"微信设置",
     child:[
       {
         name:'菜单设置',
-        path:'weixin/menu',
-        icon:'<i class="el-icon-setting"></i>',
+        path:'manage/menu',
+        icon:'el-icon-setting',
         component:weixinMenu
       },
       {
         name:'关注回复',
-        path:'weixin/subscribe',
-        icon:'<i class="el-icon-setting"></i>',
+        path:'manage/subscribe',
+        icon:'el-icon-setting',
         component:subscribe
       }
     ]
   }
+
 ]
 export default menus
