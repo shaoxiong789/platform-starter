@@ -3,7 +3,7 @@
      <el-tabs type="border-card">
         <el-tab-pane label="早起日签背景">
             <ul>
-                <li>今日时间：{{dateNow}}</li>
+                <li>今日时间：<time>{{dateNow}}</time></li>
                 <li>日签背景图还剩余：{{leftNum}}张</li>
                 <li>(如果剩余为零，随机从前边的日子的图片取)</li>
             </ul>
@@ -16,12 +16,12 @@
                 :before-upload="beforeUpload"
                 list-type="picture">
                 <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
             </el-upload>           
         </el-tab-pane>
         <el-tab-pane label="晚安日签背景">
             <ul>
-                <li>今日时间：{{dateNow}}</li>
+                <li>今日时间：<time>{{dateNow}}</time></li>
                 <li>日签背景图还剩余：{{leftNum}}张</li>
                 <li>(如果剩余为零，随机从前边的日子的图片取)</li>
             </ul>
@@ -34,7 +34,7 @@
                 :before-upload="beforeUpload"
                 list-type="picture">
                 <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
             </el-upload>           
         </el-tab-pane>
     </el-tabs>   
