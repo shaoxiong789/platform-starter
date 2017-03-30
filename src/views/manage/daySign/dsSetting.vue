@@ -5,7 +5,7 @@
                 早起打卡有效时间(AM)：
                     <el-time-select
                         placeholder="起始时间"
-                        v-model="MonStartTime"
+                        v-model="MornStartTime"
                         :picker-options="{
                         start: '00:00',
                         step: '0:30',
@@ -15,12 +15,12 @@
                     — —
                     <el-time-select
                         placeholder="结束时间"
-                        v-model="MonEndTime"
+                        v-model="MornEndTime"
                         :picker-options="{
                         start: '00:00',
                         step: '00:30',
                         end: '10:00',
-                        minTime: MonStartTime
+                        minTime: MornStartTime
                         }">
                     </el-time-select>
             </li>
@@ -68,8 +68,8 @@
   export default {
     data() {
       return {
-        MonStartTime: '4:00',
-        MonEndTime: '8:00',
+        MornStartTime: '4:00',
+        MornEndTime: '8:00',
         NightStartTime: '9:00',
         NightEndTime: '12:00',
         dialogVisible: false

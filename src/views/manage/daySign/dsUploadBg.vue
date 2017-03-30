@@ -1,30 +1,44 @@
 <template>
     <div class="comm-wrap">
-        
-        <div class="daysign-wrap">
-            <div>
-                <el-radio class="radio" v-model="radio" label="1">早起</el-radio>
-                <el-radio class="radio" v-model="radio" label="2">晚安</el-radio>
-            </div>
-
-            日签背景信息通知：
+     <el-tabs type="border-card">
+        <el-tab-pane label="早起日签背景">
             <ul>
                 <li>今日时间：{{dateNow}}</li>
                 <li>日签背景图还剩余：{{leftNum}}张</li>
                 <li>(如果剩余为零，随机从前边的日子的图片取)</li>
             </ul>
-        </div>
-        <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :file-list="fileList2"
-            :before-upload="beforeAvatarUpload"
-            list-type="picture">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
+            <el-upload
+                class="upload upload-morn"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList2"
+                :before-upload="beforeUpload"
+                list-type="picture">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>           
+        </el-tab-pane>
+        <el-tab-pane label="晚安日签背景">
+            <ul>
+                <li>今日时间：{{dateNow}}</li>
+                <li>日签背景图还剩余：{{leftNum}}张</li>
+                <li>(如果剩余为零，随机从前边的日子的图片取)</li>
+            </ul>
+             <el-upload
+                class="upload upload-night"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList2"
+                :before-upload="beforeUpload"
+                list-type="picture">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>           
+        </el-tab-pane>
+    </el-tabs>   
+
     </div>
 </template>
 
@@ -32,7 +46,6 @@
   export default {
     data() {
       return {
-        radio :'1',
         dateNow:'',
         leftNum:0,
         fileList2: [
@@ -63,13 +76,15 @@
       handlePreview(file) {
         console.log(file);
       },
-      beforeAvatarUpload(file) {
+      beforeUpload(file) {
+          // 检测图片大小 还有 和格式
+        const isJPGPNG = file.type === 'image/jpeg'||file.type === 'image/png';  
         const isLt2M = file.size / 1024 / 1024 < 2;
 
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传头像图片大小不能超过 2M!');
         }
-        return isLt2M;
+        return isJPGPNG&&isLt2M;
       }
     }
   }
@@ -78,7 +93,7 @@
 .comm-wrap{
     padding:20px;
 }
- .upload-demo{
+ .upload{
      width:500px;
      margin:30px 0;
  }
