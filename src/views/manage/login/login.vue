@@ -4,9 +4,10 @@
       <h1>login</h1>
       <el-input v-model="username" placeholder="用户名"></el-input>  
       <el-input v-model="userpwd" placeholder="密码"></el-input>
-      <el-button type="primary" >
-        <router-link :to="{ path: '/manage' }">登录</router-link>
-      </el-button>
+      <el-button type="primary" @click="login()">登录</el-button>
+      <span class="errorMsg">
+      {{errorMsg}}
+      </span>
     </div>
   </div>
 </template>
@@ -17,18 +18,37 @@ export default {
   data() {
     return {
       username: '',
-      userpwd:''
+      userpwd:'',
+      errorMsg:''
     }
   },
   methods:{
     login:function(){
+      if(this.loginVerify()){
+          sessionStorage.setItem('accessToken','username')
+          console.log(this.$router)
+          this.$router.push({
+            path:'manage/daysign/',
+            params:{
+              username:"",
+              userpwd:""
+            }
+          })
+      }else{
+        this.errorMsg = "输入错误,不能为空";
+      }
 
-      // alert("login")     
+    },
+    loginVerify:function(){
+       if(this.username != "" && this.userpwd != ""){
+        return true;
+       }
+       return false;
     }
   }
 }
 </script>
-<style>
+<style scoped>
 .login-wrap{
   width:350px;
   margin:30px auto;
@@ -37,5 +57,11 @@ export default {
 }
 .el-input{
   margin:10px 0;
+}
+.errorMsg{
+  color:orange;
+  margin-left:10%;
+  font-size:12px;
+  padding:20px;
 }
 </style>

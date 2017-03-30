@@ -1,13 +1,14 @@
 <template>
     <div class="comm-wrap">
       <el-row>
-          <el-col :span="8" v-for="(o, index) in 2" :offset="index > 0 ? 2 : 0">
+          <el-col :span="8" v-for="(item, index) in templateList" :offset="index > 0 ? 2 : 0">
               <el-card :body-style="{ padding: '0px' }">
-               <!-- <img :src="assets/image/t1.png" class="image">--> 
+               <img :src="item.imgUrl" class="image">
+               <img src="../../../assets/image/t1.png" class="image">
               <div style="padding: 14px;">
-                  <span>排版{{index+1}}</span>
+                  <span>{{item.name}}</span>
                   <div class="bottom clearfix">
-                  <el-button type="text" class="button">设为模板</el-button>
+                    <el-button type="text" class="button">设为模板</el-button>
                   </div>
               </div>
               </el-card>
@@ -18,9 +19,21 @@
 </template>
 
 <script>
+const  image = "../../../assets/image/"
+
 export default {
   data() {
     return {
+      templateList:[
+        {
+          name:"排版1",
+          imgUrl: image + "t1.png"
+        },
+        {
+          name:"排版2",
+          imgUrl: image + "t2.png"
+        }
+      ]
     }
   }
 }
