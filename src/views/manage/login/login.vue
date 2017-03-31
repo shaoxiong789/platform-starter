@@ -2,10 +2,10 @@
   <div>
     <div class="login-wrap">
       <h1>login</h1>
-      <el-input v-model="username" placeholder="用户名"></el-input>  
+      <el-input v-model="username" placeholder="用户名"></el-input>
       <el-input v-model="userpwd" placeholder="密码"></el-input>
       <el-button type="primary" >
-        <router-link :to="{ path: '/manage' }">登录</router-link>
+        <router-link :to="{ path: '/' }">登录</router-link>
       </el-button>
     </div>
   </div>
@@ -23,12 +23,12 @@ export default {
   methods:{
     login:function(){
 
-      // alert("login")     
+      // alert("login")
     }
   }
 }
 </script>
-<style>
+<style >
 .login-wrap{
   width:350px;
   margin:30px auto;

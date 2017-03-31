@@ -3,7 +3,7 @@
       <el-row>
           <el-col :span="8" v-for="(o, index) in 2" :offset="index > 0 ? 2 : 0">
               <el-card :body-style="{ padding: '0px' }">
-               <!-- <img :src="assets/image/t1.png" class="image">--> 
+              <img src="../../../assets/image/t1.png" class="image"> 
               <div style="padding: 14px;">
                   <span>排版{{index+1}}</span>
                   <div class="bottom clearfix">
@@ -12,7 +12,7 @@
               </div>
               </el-card>
           </el-col>
-      </el-row>   
+      </el-row>
     </div>
 
 </template>
@@ -31,7 +31,7 @@ export default {
     font-size: 13px;
     color: #999;
   }
-  
+
   .bottom {
     margin-top: 13px;
     line-height: 12px;
@@ -52,9 +52,8 @@ export default {
       display: table;
       content: "";
   }
-  
+
   .clearfix:after {
       clear: both
   }
 </style>
-
