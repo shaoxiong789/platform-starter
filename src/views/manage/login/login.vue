@@ -28,7 +28,7 @@ export default {
           sessionStorage.setItem('accessToken','username')
           console.log(this.$router)
           this.$router.push({
-            path:'manage/daysign/',
+            path:'/manage/daysign/',
             params:{
               username:"",
               userpwd:""
@@ -48,7 +48,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .login-wrap{
   width:350px;
   margin:30px auto;

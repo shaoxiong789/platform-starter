@@ -5,7 +5,7 @@
         <el-collapse-item v-for="(menu,index) in menus" :title="menu.name" :name="index">
             <ul class="el-menu-itms">
                 <router-link v-for="menuitem in menu.child" :to="{ path: '/'+menuitem.path }">
-                    <li class="el-menu-item"><i :class="menuitem.icon"></i>{{menuitem.name}}</li>
+                    <li class="el-menu-item" v-if="menuitem.visible"><i :class="menuitem.icon"></i>{{menuitem.name}}</li>
                 </router-link>
             </ul>
         </el-collapse-item>
