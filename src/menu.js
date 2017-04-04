@@ -66,7 +66,7 @@ const menus = [
         component:dataAnalyse,
         visible:true
       },{
-        name:'数据导出',
+        name:'数据查询',
         path:"manage/datamanage/export",
         icon:'el-icon-setting',
         component:dataExport,
