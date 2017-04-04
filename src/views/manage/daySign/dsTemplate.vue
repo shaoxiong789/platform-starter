@@ -3,7 +3,7 @@
       <el-row>
           <el-col :span="8" v-for="(item, index) in templateList" :offset="index > 0 ? 2 : 0">
               <el-card :body-style="{ padding: '0px' }">
-               <img :src="item.imgUrl" class="image">
+               <!--<img :src="item.imgUrl" class="image">-->
                <img src="../../../assets/image/t1.png" class="image">
               <div style="padding: 14px;">
                   <span>{{item.name}}</span>

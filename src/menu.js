@@ -14,6 +14,7 @@ import admin from './views/manage/admin/admin.vue'
 const menus = [
   {
     name:"日签管理",
+    visible:true,
     child:[
       {
         name:'日签管理',
@@ -56,6 +57,7 @@ const menus = [
     ]
   },{
     name:"用户数据管理",
+    visible:true,
     child:[
       {
         name:'数据分析',
@@ -79,6 +81,7 @@ const menus = [
     ]
   },{
     name:"微信设置",
+    visible:false,
     child:[
       {
         name:'菜单设置',
@@ -97,13 +100,14 @@ const menus = [
     ]
   },{
     name:"用户权限管理",
+    visible:false,
     child:[
       {
         name:'用户权限管理',
         path:'manage/admin',
         icon:'el-icon-setting',
         component:admin,
-        visible:true
+        visible:false
       }
     ]
   }

@@ -2,7 +2,7 @@
 
 <el-col>
     <el-collapse v-model="activeNames">
-        <el-collapse-item v-for="(menu,index) in menus" :title="menu.name" :name="index">
+        <el-collapse-item v-for="(menu,index) in menus" :title="menu.name" :name="index" v-if="menu.visible">
             <ul class="el-menu-itms">
                 <router-link v-for="menuitem in menu.child" :to="{ path: '/'+menuitem.path }">
                     <li class="el-menu-item" v-if="menuitem.visible"><i :class="menuitem.icon"></i>{{menuitem.name}}</li>
