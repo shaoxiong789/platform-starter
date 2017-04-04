@@ -8,6 +8,7 @@ import dsUploadBg from './views/manage/daySign/dsUploadBg.vue'
 import dsSetWord from './views/manage/daySign/dsSetWord.vue'
 import dataAnalyse from './views/manage/dataManage/analyse.vue'
 import dataExport from './views/manage/dataManage/export.vue'
+import dataPersonal from './views/manage/dataManage/personal.vue'
 import admin from './views/manage/admin/admin.vue'
 
 const menus = [
@@ -68,6 +69,12 @@ const menus = [
         icon:'el-icon-setting',
         component:dataExport,
         visible:true
+      },{
+        name:'个人数据详情',
+        path:"manage/datamanage/personal",
+        icon:'el-icon-setting',
+        component:dataPersonal,
+        visible:false
       }
     ]
   },{
