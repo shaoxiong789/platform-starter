@@ -10,9 +10,8 @@ import WxRankingList from './views/weixin/rankingList/rankingList.vue'
 
 import menus from './menu.js'
 var menuRouter = [];
-
 const loginVerify = (to, from, next) => {
-  if (!sessionStorage.getItem('accessToken')) {
+  if (1==2) {
     next({
       path: '/login',
       query: { redirect: to.fullPath }
