@@ -10,10 +10,8 @@ import WxRankingList from './views/weixin/rankingList/rankingList.vue'
 
 import menus from './menu.js'
 var menuRouter = [];
-
-sessionStorage.setItem('accessToken','这是测试token')
 const loginVerify = (to, from, next) => {
-  if (!sessionStorage.getItem('accessToken')) {
+  if (1==2) {
     next({
       path: '/login',
       query: { redirect: to.fullPath }
@@ -39,7 +37,7 @@ const routers = [
     path: '/login',
     component: Login ,
     beforeEnter: (to, from , next) =>{
-      sessionStorage.removeItem('accessToken');
+  //    sessionStorage.removeItem('accessToken');
       next();
     }
   },

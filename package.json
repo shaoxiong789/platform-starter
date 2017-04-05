@@ -4,10 +4,11 @@
   "author": "380449900@qq.com",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server -d --inline --hot --port 8080 --env.dev",
+    "dev": "webpack-dev-server -d --inline --hot --host 0.0.0.0 --port 8080 --env.dev",
     "build": "rimraf dist && webpack -p --progress --hide-modules"
   },
   "dependencies": {
+    "awe-dnd": "^0.3.0",
     "element-ui": "^1.1.2",
     "moment": "^2.18.1",
     "vue": "^2.1.8",
