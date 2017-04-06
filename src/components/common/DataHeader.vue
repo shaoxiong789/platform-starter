@@ -4,7 +4,7 @@
 
         <li class="title">
             <i class="el-icon-menu"></i>
-            <span>自控力lab 管理</span>
+            <span>自控力lab 管理后台</span>
         </li>
         <!-- <li class="option">
             <el-select v-model="value" placeholder="请选择">
