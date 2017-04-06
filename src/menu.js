@@ -43,8 +43,8 @@ const menus = [
         component:dsSetWord,
         visible:true
       },{
-        name:'时间设置',
-        path:"manage/daysign/setting",
+        name:'有效时间设置',
+        path:"manage/daysign/datesetting",
         icon:'el-icon-time',
         component:dsSetting,
         visible:true
@@ -74,10 +74,10 @@ const menus = [
         component:dataExport,
         visible:true
       },{
-        name:'用户表数据查询',
+        name:'用户数据查询',
         path:"manage/datamanage/export/tbUser",
         icon:'el-icon-setting',
-        components:dexUser,
+        component:dexUser,
         visible:false
       },{
         name:'打卡记录数据查询',

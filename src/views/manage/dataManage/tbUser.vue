@@ -3,13 +3,6 @@
         <el-tabs type="border-card">
             <el-tab-pane label="用户信息数据表">
                 <div class="condition">
-                    <el-select v-model="value"
-                               placeholder="选择早安或晚安">
-                        <el-option v-for="item in options"
-                                   :label="item.label"
-                                   :value="item.value">
-                        </el-option>
-                    </el-select>
                     <el-date-picker v-model="value7"
                                     type="daterange"
                                     align="right"

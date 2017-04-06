@@ -15,20 +15,6 @@
     
     </div>
 </template>
-<script>
-export default {
-    data() {
-        return {
-
-        }
-    },
-    methods: {
-        tabClick: function (tab) {
-            console.log(tab.$options.propsData)
-        }
-    }
-}
-</script>
 <style>
 .tb-list {
     padding: 0;
