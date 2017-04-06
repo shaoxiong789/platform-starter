@@ -14,5 +14,5 @@
   a,a:hover,a:active{
     color:#fff;
     text-decoration: none;
-  }
+  } 
 </style>
