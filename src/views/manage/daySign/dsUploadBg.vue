@@ -91,7 +91,7 @@
 </script>
 <style>
 .comm-wrap{
-    padding:20px;
+    padding:20px 0;
 }
  .upload{
      width:500px;

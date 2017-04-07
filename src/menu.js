@@ -8,6 +8,8 @@ import dsUploadBg from './views/manage/daySign/dsUploadBg.vue'
 import dsSetWord from './views/manage/daySign/dsSetWord.vue'
 import dataAnalyse from './views/manage/dataManage/analyse.vue'
 import dataExport from './views/manage/dataManage/export.vue'
+import dexUser from './views/manage/dataManage/tbUser.vue'
+import dexRecord from './views/manage/dataManage/tbRecord.vue'
 import dataPersonal from './views/manage/dataManage/personal.vue'
 import admin from './views/manage/admin/admin.vue'
 
@@ -41,8 +43,8 @@ const menus = [
         component:dsSetWord,
         visible:true
       },{
-        name:'时间设置',
-        path:"manage/daysign/setting",
+        name:'有效时间设置',
+        path:"manage/daysign/datesetting",
         icon:'el-icon-time',
         component:dsSetting,
         visible:true
@@ -72,8 +74,20 @@ const menus = [
         component:dataExport,
         visible:true
       },{
+        name:'用户数据查询',
+        path:"manage/datamanage/export/tbUser",
+        icon:'el-icon-setting',
+        component:dexUser,
+        visible:false
+      },{
+        name:'打卡记录数据查询',
+        path:"manage/datamanage/export/tbRecord",
+        icon:'el-icon-setting',
+        component:dexRecord,
+        visible:false
+      },{
         name:'个人数据详情',
-        path:"manage/datamanage/personal",
+        path:"manage/datamanage/export/tbUser/personal",
         icon:'el-icon-setting',
         component:dataPersonal,
         visible:false
@@ -81,7 +95,7 @@ const menus = [
     ]
   },{
     name:"微信设置",
-    visible:false,
+    visible:true,
     child:[
       {
         name:'菜单设置',
