@@ -178,7 +178,7 @@ export default {
     background: #eee;
     border-left: 2px solid #44b549;
     margin: 15px 0;
-    font-size:16px;
+    font-size:14px;
 }
 .tip{
     color:orange;

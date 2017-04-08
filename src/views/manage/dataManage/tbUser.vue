@@ -179,6 +179,9 @@ export default {
             currentPage: 1
         }
     },
+    mountd (){
+        this.search();//默认全部查询
+    },
     methods: {
         formatDate(row, column){
             // console.log(row, column)
