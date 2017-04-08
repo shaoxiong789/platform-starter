@@ -5,7 +5,7 @@
                             type="daterange"
                             align="right"
                             placeholder="选择日期范围"
-                            :picker-options="pickerOptions2">
+                            :picker-options="pickerOptions">
             </el-date-picker>
             <div class="user-name">
                 <el-input v-model="userName"
@@ -147,7 +147,7 @@ export default {
         return {
             userName: "", //用户名
             dateRange: '', //日期范围
-            pickerOptions2: {
+            pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
                     onClick(picker) {

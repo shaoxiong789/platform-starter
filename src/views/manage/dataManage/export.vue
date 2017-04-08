@@ -9,6 +9,9 @@
                     <li>
                         <router-link :to="{ path: '/manage/datamanage/export/tbRecord' }">(2) - 打卡记录数据表<i class="el-icon-view"></i></router-link>
                     </li>
+                    <!--<li>
+                        <router-link :to="{ path: '/manage/datamanage/export/tbRecord' }">(3) - 个人组队表<i class="el-icon-view"></i></router-link>
+                    </li>-->
                 </ul>
             </el-tab-pane>
         </el-tabs>
