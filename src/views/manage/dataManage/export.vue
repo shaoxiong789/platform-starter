@@ -25,9 +25,9 @@
     color: #555;
 }
 
-.tb-list li {
+.tb-list li a{
     padding: 10px;
-    /*display: inline-block;*/
+    display: block;
     font-size: 18px;
     border-bottom: 1px solid #ddd;
     margin: 10px 0 20px 0;

@@ -139,9 +139,6 @@ export default {
             ]
 
         },
-        rankingInfo(){
-
-        },
         getData() {
             const that = this;
             let data = [];
@@ -160,7 +157,7 @@ export default {
     }
 };
 </script>
-<style scoped>
+<style>
 .comm-left{
     width:48%;
     float:left;

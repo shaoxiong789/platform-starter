@@ -31,13 +31,11 @@
                              width="120">
             </el-table-column>                
             <el-table-column prop="name"
-                             label="姓名"
-                             width="180">
+                             label="姓名">
             </el-table-column>
             <el-table-column prop="time"
                              label="打卡时间"
                              sortable
-                             width="200"
                              :formatter="formatDate">
             </el-table-column>
             <el-table-column prop="type"
