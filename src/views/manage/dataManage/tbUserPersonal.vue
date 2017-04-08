@@ -21,6 +21,7 @@
                 <li v-for="item in rankingInfo">{{item.type}}排行：<span>第{{item.ranking}}位</span> 
                 - ( 共{{item.sum}}个好友 )</li>
             </ul>  
+            <!--详细排行前10位好友名单-->
         </div>
         <div class="echarts">
             <div class="comm-title">打卡时间折线图</div>
@@ -141,12 +142,16 @@ export default {
         },
         getData() {
             const that = this;
+            that.loading = !that.loading;
+            that.option.series[0].data = that.random(50,99);
+            that.option.series[1].data = that.random(0,40);
+        },
+        random(min,max){
             let data = [];
-            for (let i = 0, min = 50, max = 99; i < 24; i++) {
+            for (let i = 0; i < 24; i++) {
                 data.push(Math.floor(Math.random() * (max + 1 - min) + min));
             }
-            that.loading = !that.loading;
-            that.option.series[0].data = data;
+            return data;
         }
     }
 };

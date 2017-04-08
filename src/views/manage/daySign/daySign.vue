@@ -87,7 +87,8 @@ export default {
       this.$router.push({
             path:'/manage/daysign/detail',
             query:{
-              "day":day
+              "day":day,
+              "id":null
             }
           })
     },
