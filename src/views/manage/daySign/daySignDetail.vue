@@ -22,21 +22,39 @@
                     <el-form-item><el-tag type="success">{{daySign.morning.name}}</el-tag></el-form-item>
                     <el-form-item label="早安美图">
                         <el-input v-model="daySign.morning.bg"></el-input>
-                            <el-upload
-                                class="upload-demo"
-                                action="https://jsonplaceholder.typicode.com/posts/"
-                                :on-preview="handlePreview"
-                                :before-upload="beforeUpload">
-                                <el-button size="small" type="primary">点击上传</el-button>
-                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                            </el-upload>                      
+                        <el-upload
+                            class="upload-demo"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :on-preview="handlePreview"
+                            :before-upload="beforeUpload">
+                            <el-button size="mini" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>   
                     </el-form-item>
                     <el-form-item label="早安一言">
-                        <el-input v-model="daySign.morning.word.text"></el-input>
+                        <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
+                    </el-form-item>
+                    <el-form-item label="一言布局">
+                        <el-row>
+                            <el-col :span="11">
+                                font-size : <input type="text"  class="comm-input" v-model="daySign.morning.word.fontSize"> px
+                            </el-col>
+                            <el-col :span="11">
+                                color : <el-color-picker v-model="daySign.morning.word.color"></el-color-picker>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="11">
+                                position.X :  <input type="text"  class="comm-input" v-model="daySign.morning.word.x"> px
+                            </el-col>
+                            <el-col :span="11">
+                                position.Y : <input type="text"  class="comm-input" v-model="daySign.morning.word.y"> px
+                            </el-col>
+                       </el-row>
                     </el-form-item>
                     <el-form-item>
-                        <input type="button" class ="el-button el-button--primary" v-bind:disabled="false" value="预览" @click="preview"/>
-                        <el-button type="success" @click="save('morning')">保存</el-button>
+                        <input type="button" class ="el-button el-button--primary el-button--small" v-bind:disabled="false" value="预览" @click="preview"/>
+                        <el-button type="success" size="small" @click="save('morning')">保存</el-button>
                         <span class="tip">{{msg1}}</span>
                     </el-form-item>
                 </el-form>
@@ -57,16 +75,34 @@
                                 action="https://jsonplaceholder.typicode.com/posts/"
                                 :on-preview="handlePreview"
                                 :before-upload="beforeUpload">
-                                <el-button size="small" type="primary">点击上传</el-button>
+                                <el-button size="mini" type="primary">点击上传</el-button>
                                 <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                             </el-upload>                      
                     </el-form-item>
                     <el-form-item label="晚安一言">
-                        <el-input v-model="daySign.night.word.text"></el-input>
+                        <el-input v-model="daySign.night.word.text"></el-input><span class="tip">（限制30个字符）</span>
                     </el-form-item>
+                     <el-form-item label="一言布局">
+                        <el-row>
+                            <el-col :span="11">
+                                font-size : <input type="text"  class="comm-input" v-model="daySign.morning.word.fontSize"> px
+                            </el-col>
+                            <el-col :span="11">
+                                color : <el-color-picker v-model="daySign.morning.word.color"></el-color-picker>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="11">
+                                position.X :  <input type="text"  class="comm-input" v-model="daySign.morning.word.x"> px
+                            </el-col>
+                            <el-col :span="11">
+                                position.Y : <input type="text"  class="comm-input" v-model="daySign.morning.word.y"> px
+                            </el-col>
+                       </el-row>
+                    </el-form-item>                   
                     <el-form-item>
-                        <input type="button" class ="el-button el-button--primary" v-bind:disabled="false" value="预览" @click="preview"/>
-                        <el-button type="success" @click="save('night')">保存</el-button>
+                        <input type="button" class ="el-button el-button--primary el-button--small" v-bind:disabled="false" value="预览" @click="preview"/>
+                        <el-button type="success" size="small" @click="save('night')">保存</el-button>
                         <span class="tip">{{msg2}}</span>
                     </el-form-item>
                         
@@ -87,8 +123,8 @@ export default {
     data() {
         return {
             day: '',
-            msg1:"缺少图片背景和每一名言",
-            msg2:"缺少图片背景和每一名言",
+            msg1:"",
+            msg2:"",
             daySign:{
                 id:"",
                 day:"",
@@ -98,8 +134,9 @@ export default {
                     word:{
                         text:"早安",
                         fontSize:0,
-                        color:"",
-                        position:[0,0]
+                        color:"#fff",//默认 #fff
+                        x:0,//默认  0
+                        y:0
                     }
                 },
                 night:{
@@ -108,8 +145,9 @@ export default {
                     word:{
                         text:"早安",
                         fontSize:0,
-                        color:"",
-                        position:[0,0]
+                        color:"#fff",//默认 #fff
+                        x:0,//默认  0
+                        y:0
                     }
                 }
             },
@@ -164,9 +202,11 @@ export default {
           this.$message.error('上传头像图片大小不能超过 500k!');
         }
         return isJPGPNG&&isLt2M;
-      }
-      preview:function(){
-
+      },
+      preview(flag){
+        //点击预览 报错 出现友情提示 msg1 msg1
+        this.msg1 =  "友情提示：缺少背景图"; //必须
+        this.msg2 =  "友情提示：缺少每日名言"
       },
       save(flag){
 
@@ -175,14 +215,29 @@ export default {
 }
 </script>
 <style>
+.ds-wrap{
+    padding:20px 0;
+}
 .el-form-item label {
-    line-height:36px!important;
+    /*line-height:36px!important;*/
 }
 .ds-item{
     /*width:48%;
     display:inline-block;*/
     overflow:hidden;
     clear:both;
+}
+.comm-input {
+    width:30px;
+    border-radius: 4px;
+    border: 1px solid #bfcbd9;
+    box-sizing: border-box;
+}
+.el-color-picker__trigger{
+    border:none;
+}
+.ds-item .el-form-item {
+    margin-bottom:0px!important;
 }
 .ds-setting{
     width:50%;
@@ -204,7 +259,5 @@ export default {
     box-shadow:1px 1px 1px 1px rgba(0,0,0,0.3);
     margin-bottom:20px;
 }
-.btn-blue{
 
-}
 </style>

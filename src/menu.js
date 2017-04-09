@@ -4,8 +4,6 @@ import daySign from './views/manage/daySign/daySign.vue'
 import daySignDetail from './views/manage/daySign/daySignDetail.vue'
 import dsTemplate from './views/manage/daySign/dsTemplate.vue'
 import dsSetting from './views/manage/daySign/dsSetting.vue'
-import dsUploadBg from './views/manage/daySign/dsUploadBg.vue'
-import dsSetWord from './views/manage/daySign/dsSetWord.vue'
 import dataAnalyse from './views/manage/dataManage/analyse.vue'
 import dataExport from './views/manage/dataManage/export.vue'
 import dexUser from './views/manage/dataManage/tbUser.vue'
@@ -29,18 +27,6 @@ const menus = [
         path:"manage/daysign/detail",
         icon:'el-icon-picture',
         component:daySignDetail,
-        visible:false
-      },{
-        name:'上传日签背景',
-        path:"manage/daysign/uploadbg",
-        icon:'el-icon-upload',
-        component:dsUploadBg,
-        visible:false
-      },{
-        name:'设置每日一句',
-        path:"manage/daysign/setword",
-        icon:'el-icon-setting',
-        component:dsSetWord,
         visible:false
       },{
         name:'有效时间设置',
