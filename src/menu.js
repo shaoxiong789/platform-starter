@@ -35,13 +35,13 @@ const menus = [
         path:"manage/daysign/uploadbg",
         icon:'el-icon-upload',
         component:dsUploadBg,
-        visible:true
+        visible:false
       },{
         name:'设置每日一句',
         path:"manage/daysign/setword",
         icon:'el-icon-setting',
         component:dsSetWord,
-        visible:true
+        visible:false
       },{
         name:'有效时间设置',
         path:"manage/daysign/datesetting",
@@ -54,7 +54,7 @@ const menus = [
         path:"manage/daysign/template",
         icon:'el-icon-document',
         component:dsTemplate,
-        visible:true
+        visible:false
       }
     ]
   },{
