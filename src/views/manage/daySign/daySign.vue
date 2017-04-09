@@ -4,9 +4,9 @@
          - 节假日 
          - 可以显示 是否包含 背景图 和 一句鸡汤-->
       <el-alert
-        title="警告提示的文案"
+        title="警告"
         type="warning"
-        description="文字说明文字说明文字说明文字说明文字说明文字说明"
+        description="日期空白的显示需要添加背景图和每日一言"
         show-icon>
       </el-alert>
       <full-calendar class="test-fc" :events="fcEvents" 
