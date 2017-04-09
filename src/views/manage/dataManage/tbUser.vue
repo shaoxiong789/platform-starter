@@ -1,125 +1,153 @@
 <template>
     <div class="comm-wrap">
-        <el-tabs type="border-card">
-            <el-tab-pane label="用户信息数据表">
-                <div class="condition">
-                    <el-date-picker v-model="value7"
-                                    type="daterange"
-                                    align="right"
-                                    placeholder="选择日期范围"
-                                    :picker-options="pickerOptions2">
-                    </el-date-picker>
-                    <div class="user-name">
-                        <el-input v-model="userName"
-                                  placeholder="请输入用户姓名"
-                                  icon="search"
-                                  :on-icon-click="Search()"></el-input>
-                    </div>
+        <div class="condition">
+            <el-date-picker v-model="dateRange"
+                            type="daterange"
+                            align="right"
+                            placeholder="选择日期范围"
+                            :picker-options="pickerOptions">
+            </el-date-picker>
+            <div class="user-name">
+                <el-input v-model="userName"
+                          placeholder="请输入用户姓名"></el-input>
+            </div>
+            <el-button type="primary" @click="search()"><i class="el-icon-search "></i>  查询</el-button>
+            <el-button type="primary"
+                       class="right">下载表格</el-button>
+        </div>
+        <el-table :data="tableData"
+                  highlight-current-row
+                  border
+                  stripe
+                  style="width: 100%">
+            <el-table-column type="index"
+                             width="60">
+            </el-table-column>
     
-                    <el-button type="primary"
-                               class="right">下载表格</el-button>
-                </div>
-                <el-table :data="tableData3"
-                          highlight-current-row
-                          @current-change="onClickRow()"
-                          border
-                          stripe
-                          style="width: 100%">
-                    <el-table-column type="index"
-                                     width="60">
-                    </el-table-column>
-                    <el-table-column prop="name"
-                                     label="姓名"
-                                     width="180">
-                    </el-table-column>
-                    <el-table-column prop="date"
-                                     label="注册日期"
-                                     sortable
-                                     width="180">
-                    </el-table-column>
-                    <el-table-column prop="time"
-                                     label="积分">
-                    </el-table-column>
-                    <el-table-column fixed="right"
-                                     label="操作"
-                                     width="100">
-                        <template scope="scope">
-                            <el-button @click="viewDetail()"
-                                       type="text"
-                                       size="small">查看个人详情</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+            <el-table-column prop="name"
+                             label="姓名"
+                             width="180">
+            </el-table-column>
+            <el-table-column prop="createTime"
+                             label="注册日期"
+                             sortable
+                             width="180"
+                             :formatter="formatDate">
+            </el-table-column>
+            <el-table-column prop="mornintegral"
+                             sortable
+                             label="早积分">
+            </el-table-column>
+            <el-table-column prop="nightintegral"
+                             sortable
+                             label="晚积分">
+            </el-table-column>
+            <el-table-column prop="medal"
+                             sortable
+                             label="勋章数">
+            </el-table-column>
+            <el-table-column fixed="right"
+                             label="操作"
+                             width="90">
+                <template scope="scope">
+                    <el-button @click="viewDetail(scope.row.id)"
+                               type="text"
+                               size="small">查看详情</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
     
-                <div class="pagination">
-                    <el-pagination @size-change="handleSizeChange"
-                                   @current-change="handleCurrentChange"
-                                   :current-page="currentPage"
-                                   :page-size="10"
-                                   layout="total,prev, pager, next, jumper"
-                                   :total="100">
-                    </el-pagination>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
+        <div class="pagination">
+            <el-pagination @size-change="handleSizeChange"
+                           @current-change="handleCurrentChange"
+                           :current-page="currentPage"
+                           :page-size="10"
+                           layout="total,prev, pager, next, jumper"
+                           :total="100">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
 <script>
+import moment from 'moment';
 let tableData = [{
-    date: '2016-05-03',
+    id:"1",
+    createTime: '2016-05-03',
     name: '王小虎0',
-    time: '-0-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-02',
+    id:"2",
+    createTime: '2016-05-02',
     name: '王小虎00',
-    time: '--0'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-04',
+    id:"3",
+    createTime: '2016-05-04',
     name: '王小虎1',
-    time: '-1-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-01',
+    id:"4",
+    createTime: '2016-05-01',
     name: '王小虎',
-    time: '虎--'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-08',
+    id:"5",
+    createTime: '2016-05-08',
     name: '王小虎2',
-    time: '-2-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-06',
+    id:"6",
+    createTime: '2016-05-06',
     name: '王小虎3',
-    time: '-3-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-07',
+    id:"7",
+    createTime: '2016-05-07',
     name: '王小虎4',
-    time: '-4-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-08',
+    id:"8",
+    createTime: '2016-05-08',
     name: '王小虎5',
-    time: '-5-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-06',
+    id:"9",
+    createTime: '2016-05-06',
     name: '王小虎6',
-    address: '-6-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }, {
-    date: '2016-05-07',
+    id:"10",
+    createTime: '2016-05-07',
     name: '王小虎7',
-    address: '-7-'
+    mornintegral: 0,
+    nightintegral: 0,
+    medal:0
 }];
 export default {
     data() {
         return {
-            options: [{
-                value: '1',
-                label: '早安打卡'
-            }, {
-                value: '2',
-                label: '晚安打卡'
-            }],
-            value: '',
-            userName: "",
-            pickerOptions2: {
+            userName: "", //用户名
+            dateRange: '', //日期范围
+            pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
                     onClick(picker) {
@@ -145,16 +173,19 @@ export default {
                         picker.$emit('pick', [start, end]);
                     }
                 }]
-            },
-            value7: '',
-            tableData3: tableData,
+            },          
+            tableData: tableData,
             currentRow: null,
             currentPage: 1
         }
     },
+    mountd (){
+        this.search();//默认全部查询
+    },
     methods: {
-        onClickRow(val) {
-            this.currentRow = val;
+        formatDate(row, column){
+            // console.log(row, column)
+            return moment(row.date).format("YYYY-MM-DD");
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -163,16 +194,22 @@ export default {
             this.currentPage = val;
             console.log(`当前页: ${val}`);
         },
-        viewDetail() {
-            console.log(this.currentRow)
-            // this.$router.push({
-            //     path: "/manage/datamanage/export/tbUser/personal",
-            //     query: {
-            //         "currentRow" : this.currentRow
-            //     }
-            // });
+        viewDetail(id) {
+            this.$router.push({
+                path: "/manage/datamanage/export/tbUser/personal",
+                query: {
+                    "id":id
+                }
+            });
         },
-        Search() {
+        search() {
+            /**根据用户姓名模糊查询
+             * 如姓名为空userName ，则根据dateRange
+             * 2这皆空 默认查询所有
+             */
+            console.log(this.userName,this.dateRange)
+        },
+        searchByUserName() {
 
         }
     }
