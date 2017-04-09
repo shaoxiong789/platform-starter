@@ -34,7 +34,7 @@
         </div>    
         <br/>
         <div class="echarts">
-            <div class="comm-title">用户每日的打卡次数分析(取周平均)</div> 
+            <div class="comm-title">每日的打卡人数分析(取周平均)</div> 
             <IEcharts :option="barweek"></IEcharts>
         </div>  
             
@@ -241,7 +241,7 @@ export default {
                 containLabel: true
             },
             legend: {
-                data: ['早上平均打卡次数','晚上平均打卡次数']
+                data: ['早上','晚上']
             },
             xAxis: [{
                 type: 'category',
@@ -252,13 +252,13 @@ export default {
             }],
             yAxis: {
                 type: 'value',
-                name: '打卡次数',
+                name: '打卡人次',
                 position: 'left'
             },
             series: [ {
-                name: '早上平均打卡次数',
+                name: '早上',
                 type: 'bar',
-                stack: '打卡次数',
+                stack: '打卡人数',
                     label: {
                         normal: {
                             show: true,
@@ -267,9 +267,9 @@ export default {
                     },
                 data: [209,236,325,439,507,576,722]
             },{
-                name: '晚上平均打卡次数',
+                name: '晚上',
                 type: 'bar',
-                stack: '打卡次数',
+                stack: '打卡人数',
                     label: {
                         normal: {
                             show: true,

@@ -1,33 +1,35 @@
 <template>
-    <div>
-        <h1>自定义日历</h1>
+    <div class="comm-wrap">
+        <!--<h1>自定义日历</h1>
          - 节假日 
-         - 可以显示 是否包含 背景图 和 一句鸡汤
-         <div class="comm-wrap">
-              <label for="">选择：</label>
-              <el-radio class="radio" v-model="radio" label="0">全部</el-radio>
-              <el-radio class="radio" v-model="radio" label="1">早安</el-radio>
-              <el-radio class="radio" v-model="radio" label="2">晚安</el-radio>                       
-         </div>
+         - 可以显示 是否包含 背景图 和 一句鸡汤-->
+      <el-alert
+        title="警告提示的文案"
+        type="warning"
+        description="文字说明文字说明文字说明文字说明文字说明文字说明"
+        show-icon>
+      </el-alert>
+      <full-calendar class="test-fc" :events="fcEvents" 
+        first-day='1' lang="zh" 
+        @changeMonth="changeMonth"
+        @eventClick="eventClick"
+        @dayClick="dayClick"
+        @moreClick="moreClick">
+          <template slot="fc-event-card" scope="scope">
+              <p><i class="fa">sadfsd</i> {{ scope }} test</p>
+          </template>
+          
+          <template slot="fc-header-left">
+            日签管理日历
+          </template>
+          <template slot="fc-header-right">
+            (<span class="fulcalendar-tip"> 友情提示：<span class="tip">点击日历进入详情</span></span>)
+          </template>
+          <!--<template slot="fc-body-card">
+            修改
+          </template>-->
+      </full-calendar>
 
-
-    <full-calendar class="test-fc" :events="fcEvents" 
-      first-day='1' locale="zh" 
-      @changeMonth="changeMonth"
-      @eventClick="eventClick"
-      @dayClick="dayClick"
-      @moreClick="moreClick">
-        <!--<template slot="fc-event-card" scope="p">
-            <p><i class="fa">sadfsd</i> {{ p.event.title }} test</p>
-        </template>
-        
-        <template slot="fc-header-right">
-          fc-header-right
-        </template>
-        <template slot="fc-body-card">
-          修改
-        </template>-->
-    </full-calendar>
     </div>
 </template>
 <script>
@@ -35,27 +37,40 @@ import moment from 'moment';
 
 let demoEvents = [
     {
-      title    : 'A1',//早安图
+      title    : '早图',//早安图
       start    : '2017-04-01',
       end      : '2017-04-01',
-      cssClass : 'morningbg'
+      cssClass : 'morningbg',
+      id:"",
+      type:"A1"
     },{
-      title    : 'A2',//早安一句话
+      title    : '早言',//早安一句话
       start    : '2017-04-01',
       end      : '2017-04-01',
-      cssClass : 'morningword'
+      cssClass : 'morningword',
+      id:"",
+      type:"A2"
     },{
-      title    : 'B1',//晚安图
+      title    : '晚图',//晚安图
       start    : '2017-04-01',
       end      : '2017-04-01',
-      cssClass : 'nightbg'
+      cssClass : 'nightbg',
+      id:"",
+      type:"B1"
     },{
-      title    : 'B2',//晚安一句话
+      title    : '晚言',//晚安一句话
       start    : '2017-04-01',
       end      : '2017-04-01',
-      cssClass : 'nightword'
+      cssClass : 'nightword',
+      id:"",
+      type:"B2"
     }
   ];
+
+var daySign = {
+  id:"",
+
+}
 
 export default {
 	data () {
@@ -76,7 +91,7 @@ export default {
   },
   methods : {
     'changeMonth' (start, end, current) {
-      console.log('changeMonth',start, end, current)
+      // console.log('changeMonth',start, end, current)
       // console.log('changeMonth', start.format(), end.format(), current.format())
     },
     'eventClick' (event, jsEvent, pos) {
@@ -93,7 +108,7 @@ export default {
           })
     },
     'moreClick' (day, events, jsEvent) {
-      console.log('moreCLick', moment(day).format("YYYY-MM-DD hh:mm"), events, jsEvent)
+      // console.log('moreCLick', moment(day).format("YYYY-MM-DD hh:mm"), events, jsEvent)
     }
   },
   components : {
@@ -120,5 +135,8 @@ export default {
   }
   .nightword{
     background-color:#ab7904!important;
+  }
+  .fulcalendar-tip{
+    font-size:12px;
   }
 </style>

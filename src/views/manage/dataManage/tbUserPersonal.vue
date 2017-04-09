@@ -5,22 +5,27 @@
                    @click="goBack()"><i class="el-icon-d-arrow-left"></i> 返回上一页</el-button>
         <br>
         <div class="comm-left">
-             <div class="comm-title">个人信息</div>
+            <div class="comm-title">个人信息</div>
             <ul class="user-info">
-                <li><label for="">用户微信名：</label><span>{{user.name}}</span></li>
-                <li><label for="">注册时间：</label><span>{{user.createTime}}</span></li>
-                <li><label for="">早起积分：</label><span>{{user.mornintegral}}</span></li>
-                <li><label for="">晚安积分：</label><span>{{user.nightintegral}}</span></li>
-                <li><label for="">勋章数：</label><span>{{user.medal}} </span>
-                    <span class="tip">🎖（连续打卡22天获得一颗勋章）</span></li>
-            </ul>     
+                <li>
+                    <label for="">用户微信名：</label><span>{{user.name}}</span></li>
+                <li>
+                    <label for="">注册时间：</label><span>{{user.createTime}}</span></li>
+                <li>
+                    <label for="">早起积分：</label><span>{{user.mornintegral}}</span></li>
+                <li>
+                    <label for="">晚安积分：</label><span>{{user.nightintegral}}</span></li>
+                <li>
+                    <label for="">勋章数：</label><span>{{user.medal}} </span>
+                    <span class="tip">🎖（连续打卡22天获得一颗勋章）</span>
+                </li>
+            </ul>
         </div>
         <div class="comm-right">
             <div class="comm-title">好友积分排行</div>
-            <ul class="ranking" >
-                <li v-for="item in rankingInfo">{{item.type}}排行：<span>第{{item.ranking}}位</span> 
-                - ( 共{{item.sum}}个好友 )</li>
-            </ul>  
+            <ul class="ranking">
+                <li v-for="item in rankingInfo">{{item.type}}排行：<span>第{{item.ranking}}位</span> - ( 共{{item.sum}}个好友 )</li>
+            </ul>
             <!--详细排行前10位好友名单-->
         </div>
         <div class="echarts">
@@ -43,8 +48,8 @@ export default {
     props: {
     },
     data: () => ({
-        user:"",
-        rankingInfo:"",
+        user: "",
+        rankingInfo: "",
         loading: true,
         option: {
             title: {
@@ -70,7 +75,7 @@ export default {
                 name: "时刻",
                 type: 'value',
                 axisLabel: {
-                    formatter: function(value){
+                    formatter: function (value) {
                         return value;
                     }
                 }
@@ -93,7 +98,7 @@ export default {
             }, {
                 name: '晚安',
                 type: 'line',
-                data: [5, 20, 36, 10, 10, 20, 0,20],
+                data: [5, 20, 36, 10, 10, 20, 0, 20],
                 markPoint: {
                     data: [
                         { type: 'max', name: '最大值' },
@@ -117,25 +122,25 @@ export default {
         goBack: function () {
             this.$router.go(-1);
         },
-        getUserInfoById(){
-           this.user = {
-                id:"1",
+        getUserInfoById() {
+            this.user = {
+                id: "1",
                 createTime: '2016-05-03',
                 name: '王小虎0',
                 mornintegral: 990,
                 nightintegral: 888,
-                medal:0
+                medal: 0
             }
             //获取排行信息
             this.rankingInfo = [
                 {
-                    type:'早起',
-                    ranking:1,
-                    sum:2383
-                },{
-                    type:'晚安',
-                    ranking:3,
-                    sum:88
+                    type: '早起',
+                    ranking: 1,
+                    sum: 2383
+                }, {
+                    type: '晚安',
+                    ranking: 3,
+                    sum: 88
                 }
             ]
 
@@ -143,10 +148,10 @@ export default {
         getData() {
             const that = this;
             that.loading = !that.loading;
-            that.option.series[0].data = that.random(50,99);
-            that.option.series[1].data = that.random(0,40);
+            that.option.series[0].data = that.random(50, 99);
+            that.option.series[1].data = that.random(0, 40);
         },
-        random(min,max){
+        random(min, max) {
             let data = [];
             for (let i = 0; i < 24; i++) {
                 data.push(Math.floor(Math.random() * (max + 1 - min) + min));
@@ -157,33 +162,37 @@ export default {
 };
 </script>
 <style>
-.comm-left{
-    width:48%;
-    float:left;
-    font-size:14px;
+.comm-left {
+    width: 48%;
+    float: left;
+    font-size: 14px;
 }
-.user-info{
+
+.user-info {}
+
+.comm-right {
+    width: 48%;
+    float: right;
+    font-size: 14px;
 }
-.comm-right{
-    width:48%;
-    float:right;
-    font-size:14px;
-}
-.comm-title{
+
+.comm-title {
     padding: 5px 15px;
     background: #eee;
     border-left: 2px solid #44b549;
     margin: 15px 0;
-    font-size:14px;
-    line-height:30px;
+    font-size: 14px;
+    line-height: 30px;
 }
-.tip{
-    color:orange;
-    font-size:12px;
+
+.tip {
+    color: orange;
+    font-size: 12px;
 }
+
 .echarts {
     /*width: 400px;*/
     height: 400px;
-    clear:both;
+    clear: both;
 }
 </style>

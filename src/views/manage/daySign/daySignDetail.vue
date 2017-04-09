@@ -2,60 +2,177 @@
     <div class="comm-wrap ds-wrap">
         <el-button type="text"
                    size="mini"
-                   @click="goBack()"><i class="el-icon-d-arrow-left"></i> 返回上一页</el-button>
-        <h1>daySignDetail</h1> {{day}}
-        <ul>
-            <li> -检测有无背景图 无-显示上传编辑背景图， 有-从图片库里选择修改 <br>
-                -图片上传剪切 图片必须是640*500的尺寸
-            </li>
-            <li> -同理检测每一名言 xy 位置 size 大小  可配置</li>
-             - 早安 晚安的 是否显示
-            <li>- 同步右侧预览功能</li>
-               
-        </ul>
-        
+                   @click="goBack()"><i class="el-icon-d-arrow-left"></i> 返回日历</el-button>
+        <div class="day-info">
+            {{day}}              
+        </div>       
+                 <!--<ul>
+                    <li>{{day}}</li>
+                    <li> -检测有无背景图 无-显示上传编辑背景图， 有-从图片库里选择修改 <br>
+                        -图片上传剪切 图片必须是640*500的尺寸
+                    </li>
+                    <li> -同理检测每一名言 xy 位置 size 大小  可配置</li>
+                    - 早安 晚安的 是否显示
+                    <li>- 同步右侧预览功能</li>              
+                </ul> -->       
 
-        <div class="ds-setting">
-            <div class="select-type">
-                <label for="">选择：</label>
-                <el-radio class="radio" v-model="radio" label="1">早安</el-radio>
-                <el-radio class="radio" v-model="radio" label="2">晚安</el-radio>                       
+        <div class="ds-item">       
+            <div class="ds-setting">
+                <el-form :label-position="right" label-width="80px" :model="daySign">
+                    <el-form-item><el-tag type="success">{{daySign.morning.name}}</el-tag></el-form-item>
+                    <el-form-item label="早安美图">
+                        <el-input v-model="daySign.morning.bg"></el-input>
+                        <el-upload
+                            class="upload-demo"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :on-preview="handlePreview"
+                            :before-upload="beforeUpload">
+                            <el-button size="mini" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>   
+                    </el-form-item>
+                    <el-form-item label="早安一言">
+                        <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
+                    </el-form-item>
+                    <el-form-item label="一言布局">
+                        <el-row>
+                            <el-col :span="11">
+                                font-size : <input type="text"  class="comm-input" v-model="daySign.morning.word.fontSize"> px
+                            </el-col>
+                            <el-col :span="11">
+                                color : <el-color-picker v-model="daySign.morning.word.color"></el-color-picker>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="11">
+                                position.X :  <input type="text"  class="comm-input" v-model="daySign.morning.word.x"> px
+                            </el-col>
+                            <el-col :span="11">
+                                position.Y : <input type="text"  class="comm-input" v-model="daySign.morning.word.y"> px
+                            </el-col>
+                       </el-row>
+                    </el-form-item>
+                    <el-form-item>
+                        <input type="button" class ="el-button el-button--primary el-button--small" v-bind:disabled="false" value="预览" @click="preview"/>
+                        <el-button type="success" size="small" @click="save('morning')">保存</el-button>
+                        <span class="tip">{{msg1}}</span>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div class="ds-preview">
+                <div class="ds-pw-img"><img src="../../../assets/image/t1.png" class="image"></div>
             </div>
         </div>
-        <div class="ds-preview">
-            <div class="ds-pw-img"><img src="../../../assets/image/t1.png" class="image"></div>
-            <input type="button" class ="comm-blue" :class ="{"preview":true}"
-            <span class="tip">{{msg}}</span>
+
+        <div class="ds-item">       
+            <div class="ds-setting">
+                <el-form :label-position="right" label-width="80px" :model="daySign">
+                    <el-form-item><el-tag type="warning">{{daySign.night.name}}</el-tag></el-form-item>
+                    <el-form-item label="晚安美图">
+                        <el-input v-model="daySign.night.bg"></el-input>
+                            <el-upload
+                                class="upload-demo"
+                                action="https://jsonplaceholder.typicode.com/posts/"
+                                :on-preview="handlePreview"
+                                :before-upload="beforeUpload">
+                                <el-button size="mini" type="primary">点击上传</el-button>
+                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                            </el-upload>                      
+                    </el-form-item>
+                    <el-form-item label="晚安一言">
+                        <el-input v-model="daySign.night.word.text"></el-input><span class="tip">（限制30个字符）</span>
+                    </el-form-item>
+                     <el-form-item label="一言布局">
+                        <el-row>
+                            <el-col :span="11">
+                                font-size : <input type="text"  class="comm-input" v-model="daySign.morning.word.fontSize"> px
+                            </el-col>
+                            <el-col :span="11">
+                                color : <el-color-picker v-model="daySign.morning.word.color"></el-color-picker>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="11">
+                                position.X :  <input type="text"  class="comm-input" v-model="daySign.morning.word.x"> px
+                            </el-col>
+                            <el-col :span="11">
+                                position.Y : <input type="text"  class="comm-input" v-model="daySign.morning.word.y"> px
+                            </el-col>
+                       </el-row>
+                    </el-form-item>                   
+                    <el-form-item>
+                        <input type="button" class ="el-button el-button--primary el-button--small" v-bind:disabled="false" value="预览" @click="preview"/>
+                        <el-button type="success" size="small" @click="save('night')">保存</el-button>
+                        <span class="tip">{{msg2}}</span>
+                    </el-form-item>
+                        
+                </el-form>
+
+            </div>
+            <div class="ds-preview">
+                <div class="ds-pw-img"><img src="../../../assets/image/t1.png" class="image"></div>
+            </div>
         </div>
+
     </div>
 </template>
 <script>
+import moment from 'moment';
+
 export default {
     data() {
         return {
             day: '',
-            msg:"缺少图片背景和每一名言"
+            msg1:"",
+            msg2:"",
+            daySign:{
+                id:"",
+                day:"",
+                morning:{
+                    name:"早起打卡",
+                    bg:"../../../assets/image/t1.png",
+                    word:{
+                        text:"早安",
+                        fontSize:0,
+                        color:"#fff",//默认 #fff
+                        x:0,//默认  0
+                        y:0
+                    }
+                },
+                night:{
+                    name:"晚安打卡",
+                    bg:"../../../assets/image/t1.png",
+                    word:{
+                        text:"早安",
+                        fontSize:0,
+                        color:"#fff",//默认 #fff
+                        x:0,//默认  0
+                        y:0
+                    }
+                }
+            },
+            prewImage:"../../../assets/image/t1.png",//base64
         }
 
     },
     created() {
-        this.getRoute()
+        this.getDate()
     },
     watch:{
     'radio'(val, oldVal){
       console.log(val, oldVal)
-            this.warning();
+            this.openWarning();
         }
     },
     methods: {
-        getRoute: function () {
-            console.log(this.$route.query)
-            this.day = JSON.stringify(this.$route.query)
+        getDate: function () {
+            this.daySign.day = JSON.stringify(this.$route.query.day);
+            this.day = this.daySign.day;
         },
         goBack: function () {
             this.$router.go(-1);
         },
-        warning() {
+        openWarning() {
             this.$confirm('切换早晚将清除未保存设置, 是否保存?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -72,18 +189,75 @@ export default {
                 });          
             });
             //非自动保存 不然如何预览
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      beforeUpload(file) {
+          // 检测图片大小 还有 和格式
+        const isJPGPNG = file.type === 'image/jpeg'||file.type === 'image/png';  
+        const isLt2M = file.size / 1024 / 1024 < 0.5;
+
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 500k!');
+        }
+        return isJPGPNG&&isLt2M;
+      },
+      preview(flag){
+        //点击预览 报错 出现友情提示 msg1 msg1
+        this.msg1 =  "友情提示：缺少背景图"; //必须
+        this.msg2 =  "友情提示：缺少每日名言"
+      },
+      save(flag){
+
       }
     }
 }
 </script>
 <style>
+.ds-wrap{
+    padding:20px 0;
+}
+.el-form-item label {
+    /*line-height:36px!important;*/
+}
+.ds-item{
+    /*width:48%;
+    display:inline-block;*/
+    overflow:hidden;
+    clear:both;
+}
+.comm-input {
+    width:30px;
+    border-radius: 4px;
+    border: 1px solid #bfcbd9;
+    box-sizing: border-box;
+}
+.el-color-picker__trigger{
+    border:none;
+}
+.ds-item .el-form-item {
+    margin-bottom:0px!important;
+}
 .ds-setting{
-
+    width:50%;
+    float:left;
+}
+.day-info{
+    font-size:16px;
+    margin-left:90px;
+    float:right;
+    width:42%;
 }
 .ds-preview{
-
+    width:42%;
+    float:right;
+    padding-left:8%;
 }
 .ds-pw-img{
-    width:640px;
+    width:320px;   
+    box-shadow:1px 1px 1px 1px rgba(0,0,0,0.3);
+    margin-bottom:20px;
 }
+
 </style>
