@@ -22,21 +22,21 @@
                     <el-form-item><el-tag type="success">{{daySign.morning.name}}</el-tag></el-form-item>
                     <el-form-item label="早安美图">
                         <el-input v-model="daySign.morning.bg"></el-input>
-                            <el-button @click.prevent="removeDomain(domain)">
-                            <span v-if="daySign.morning.bg==''">
-                                添加
-                            </span>
-                            <span v-else>
-                                修改
-                            </span>                           
-                            </el-button>                      
+                            <el-upload
+                                class="upload-demo"
+                                action="https://jsonplaceholder.typicode.com/posts/"
+                                :on-preview="handlePreview"
+                                :before-upload="beforeUpload">
+                                <el-button size="small" type="primary">点击上传</el-button>
+                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                            </el-upload>                      
                     </el-form-item>
                     <el-form-item label="早安一言">
                         <el-input v-model="daySign.morning.word.text"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <input type="button" class ="el-button el-button--primary" v-bind:disabled="false" value="预览" @click="preview"/>
-                        <el-button type="primary" @click="save('morning')">保存</el-button>
+                        <el-button type="success" @click="save('morning')">保存</el-button>
                         <span class="tip">{{msg1}}</span>
                     </el-form-item>
                 </el-form>
@@ -52,21 +52,21 @@
                     <el-form-item><el-tag type="warning">{{daySign.night.name}}</el-tag></el-form-item>
                     <el-form-item label="晚安美图">
                         <el-input v-model="daySign.night.bg"></el-input>
-                            <el-button @click.prevent="removeDomain(domain)">
-                            <span v-if="daySign.night.bg==''">
-                                添加
-                            </span>
-                            <span v-else>
-                                修改
-                            </span>                           
-                            </el-button>                      
+                            <el-upload
+                                class="upload-demo"
+                                action="https://jsonplaceholder.typicode.com/posts/"
+                                :on-preview="handlePreview"
+                                :before-upload="beforeUpload">
+                                <el-button size="small" type="primary">点击上传</el-button>
+                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                            </el-upload>                      
                     </el-form-item>
                     <el-form-item label="晚安一言">
                         <el-input v-model="daySign.night.word.text"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <input type="button" class ="el-button el-button--primary" v-bind:disabled="false" value="预览" @click="preview"/>
-                        <el-button type="primary" @click="save('night')">保存</el-button>
+                        <el-button type="success" @click="save('night')">保存</el-button>
                         <span class="tip">{{msg2}}</span>
                     </el-form-item>
                         
@@ -152,6 +152,19 @@ export default {
             });
             //非自动保存 不然如何预览
       },
+      handlePreview(file) {
+        console.log(file);
+      },
+      beforeUpload(file) {
+          // 检测图片大小 还有 和格式
+        const isJPGPNG = file.type === 'image/jpeg'||file.type === 'image/png';  
+        const isLt2M = file.size / 1024 / 1024 < 0.5;
+
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 500k!');
+        }
+        return isJPGPNG&&isLt2M;
+      }
       preview:function(){
 
       },
