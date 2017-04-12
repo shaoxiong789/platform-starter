@@ -34,6 +34,11 @@
                              width="180"
                              :formatter="formatDate">
             </el-table-column>
+            <el-table-column prop="totalDays"
+                             sortable
+                             width="150"
+                             label="累计打卡天数">
+            </el-table-column>  
             <el-table-column prop="mornintegral"
                              sortable
                              label="早积分">
@@ -42,6 +47,7 @@
                              sortable
                              label="晚积分">
             </el-table-column>
+          
             <el-table-column prop="medal"
                              sortable
                              label="勋章数">
@@ -75,6 +81,7 @@ let tableData = [{
     id:"1",
     createTime: '2016-05-03',
     name: '王小虎0',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -82,6 +89,7 @@ let tableData = [{
     id:"2",
     createTime: '2016-05-02',
     name: '王小虎00',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -89,6 +97,7 @@ let tableData = [{
     id:"3",
     createTime: '2016-05-04',
     name: '王小虎1',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -96,6 +105,7 @@ let tableData = [{
     id:"4",
     createTime: '2016-05-01',
     name: '王小虎',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -103,6 +113,7 @@ let tableData = [{
     id:"5",
     createTime: '2016-05-08',
     name: '王小虎2',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -110,6 +121,7 @@ let tableData = [{
     id:"6",
     createTime: '2016-05-06',
     name: '王小虎3',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -117,6 +129,7 @@ let tableData = [{
     id:"7",
     createTime: '2016-05-07',
     name: '王小虎4',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -124,6 +137,7 @@ let tableData = [{
     id:"8",
     createTime: '2016-05-08',
     name: '王小虎5',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -131,6 +145,7 @@ let tableData = [{
     id:"9",
     createTime: '2016-05-06',
     name: '王小虎6',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0
@@ -138,6 +153,7 @@ let tableData = [{
     id:"10",
     createTime: '2016-05-07',
     name: '王小虎7',
+    totalDays:"666",
     mornintegral: 0,
     nightintegral: 0,
     medal:0

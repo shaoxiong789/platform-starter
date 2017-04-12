@@ -99,6 +99,8 @@ export default {
     },
     'dayClick' (day, jsEvent) {
       console.log('dayClick', moment(day).format("YYYY-MM-DD hh:mm"), jsEvent)
+      //检测过期  在今天之前的 没法修改  显示弹出框 过期无法修改
+
       this.$router.push({
             path:'/manage/daysign/detail',
             query:{
