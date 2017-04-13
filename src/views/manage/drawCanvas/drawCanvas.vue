@@ -62,7 +62,11 @@ export default {
             this._drawImage(ctx, "code", 286, 654, 102, 102);
             this._drawImage(ctx, "date", 539, 578, 45, 44);
 
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 500, 640, 300);
+
             ctx.font = "32px serif";
+            ctx.fillStyle = "#000";
             ctx.fillText(this.config.signTime, 150, 568);
             ctx.font = "16px sans-serif";
             ctx.fillStyle = "#555";
