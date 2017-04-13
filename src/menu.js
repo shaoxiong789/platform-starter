@@ -2,8 +2,10 @@ import weixinMenu from './views/manage/menu.vue'
 import subscribe from './views/manage/subscribe.vue'
 import daySign from './views/manage/daySign/daySign.vue'
 import daySignDetail from './views/manage/daySign/daySignDetail.vue'
+import dsPhotoGallery from './views/manage/daySign/dsPhotoGallery.vue'
 import dsTemplate from './views/manage/daySign/dsTemplate.vue'
 import dsSetting from './views/manage/daySign/dsSetting.vue'
+import drawCanvas from './views/manage/drawCanvas/drawCanvas.vue'
 import dataAnalyse from './views/manage/dataManage/analyse.vue'
 import dataExport from './views/manage/dataManage/export.vue'
 import dexUser from './views/manage/dataManage/tbUser.vue'
@@ -28,6 +30,18 @@ const menus = [
         icon:'el-icon-picture',
         component:daySignDetail,
         visible:false
+      },{
+        name:'生成日签',
+        path:"manage/drawCanvas",
+        icon:'el-icon-picture',
+        component:drawCanvas,
+        visible:true
+      },{
+        name:'图片库管理',
+        path:"manage/daysign/photoGallery",
+        icon:'el-icon-picture',
+        component:dsPhotoGallery,
+        visible:true
       },{
         name:'有效时间设置',
         path:"manage/daysign/datesetting",

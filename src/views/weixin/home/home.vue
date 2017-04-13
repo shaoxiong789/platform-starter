@@ -107,7 +107,7 @@ export default {
 .sun {
     position: absolute;
     top: 20px;
-    right: 100px;
+    right: 40px;
     width: 60px;
     height: 60px;
     display: block;
