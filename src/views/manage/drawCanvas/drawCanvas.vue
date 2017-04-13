@@ -27,6 +27,13 @@ export default {
         config: {
             userLogo: "",
             bgImg: "",
+            word: {
+                text: "Happiness takes no account of time.Happiness takes no account of time.Happiness takes no account of time.",
+                fontSize: 30,
+                color: "#fff",//默认 #fff
+                x: 50,//默认  0
+                y: 250
+            },
             signTime: moment(new Date()).hours() + ":" + moment(new Date()).seconds(),
             totalNum: 13388,
             beyond: "81%",
@@ -45,24 +52,30 @@ export default {
         },
         draw() {
             const ctx = document.getElementById('canvas').getContext('2d');
-            // const ctx2 = document.getElementById('word').getContext('2d');
-            // console.log(canvas,ctx)
-            this.drawStatic(ctx);
-            this.drawDate(ctx);
-
-            ctx.font = "30px serif";
-            ctx.fillStyle = "#fff";
-            ctx.fillText("Happiness takes no account of time.", 50, 250);
-            ctx.fillText("晚安", 50, 300);
+            this.drawStatic(ctx,this.config.word);
         },
-        drawStatic(ctx) {
+        drawStatic(ctx,word) {
+            const that = this;
+            this._drawImage(ctx, "bgnight", 0, 0, 640, 500, function () {
+                ctx.font = word.fontSize+"px serif";
+                ctx.fillStyle = word.color;
+                const text = ctx.measureText(word.text)
+                if(text.width>640-word.x){
+                    console.log(word.text.length) //切割换行
+                    ctx.fillText(word.text, word.x, word.y);
+                    ctx.fillText("晚安", word.x, word.y+50);
+                }else{
+                    ctx.fillText(word.text, word.x, word.y);
+                    ctx.fillText("晚安", word.x, word.y+50);
+                }
+                
+                that.drawDate(ctx);
+            });
+            this._drawImage(ctx, "logo", 40, 540, 85, 85, null);
+            this._drawImage(ctx, "code", 286, 654, 102, 102, null);
+            this._drawImage(ctx, "date", 539, 578, 45, 44, null);
 
-            // this._drawImage(ctx, "bgnight", 0, 0, 640, 500);
-            this._drawImage(ctx, "logo", 40, 540, 85, 85);
-            this._drawImage(ctx, "code", 286, 654, 102, 102);
-            this._drawImage(ctx, "date", 539, 578, 45, 44);
-
-            ctx.fillStyle = "#fff";
+            ctx.fillStyle = "#fff"; //画白底
             ctx.fillRect(0, 500, 640, 300);
 
             ctx.font = "32px serif";
@@ -85,25 +98,28 @@ export default {
             ctx.textAlign = "start";
             ctx.fillText("扫码和我互道晚安", 280, 780);
         },
-        _drawImage(ctx, id, x, y, w, h) {
+        _drawImage(ctx, id, x, y, w, h, callback) {
             //  draw bgImg
             // let img = new Image();
-            // img.src = "./bgnight.png"; // url error
+            // img.src = "./bgnight.png"; // url  实际用URL
             let img = document.getElementById(id);
             img.onload = function () {
                 ctx.drawImage(img, x, y, w, h);
+                if (callback != null) {
+                    callback();
+                }
             }
         },
         drawDate(ctx) {
-            ctx.font = "14px serif";
+            ctx.font = "16px serif";
             ctx.fillStyle = "#fff";
             let day = new Date();
-            ctx.fillText(moment(day).format("YYYY/MM/DD"), 565, 468);
+            ctx.fillText(moment(day).format("YYYY/MM/DD"), 555, 468);
+            ctx.font = "14px serif";
             ctx.fillText(this.weekFormat(moment(day).weekday()), 600, 485);
-
         },
         _drawcirclebg(ctx) {
-            //二维码渐变背景
+            //二维码渐变背景 弃用
             var x1 = 333;   // 第一个圆圆心的X坐标
             var y1 = 701;   // 第一个圆圆心的Y坐标
             var r1 = 10;    // 第一个圆的半径
@@ -141,12 +157,6 @@ export default {
             }
             return weekday;
         }
-        // fillText
-
-        //  draw logo 
-
-        // draw 二维码
-
     }
 }
 
@@ -157,12 +167,13 @@ export default {
 canvas#canvas {
     width: 640px;
     height: 800px;
-    background:url(bgnight.png) no-repeat;
 }
-canvas{
+
+canvas {
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
     background-color: transparent;
 }
+
 img {
     display: none;
 }
