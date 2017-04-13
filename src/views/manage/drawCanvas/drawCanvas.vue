@@ -28,8 +28,10 @@ export default {
             userLogo: "",
             bgImg: "",
             word: {
-                text: "Happiness takes no account of time.Happiness takes no account of time.Happiness takes no account of time.",
-                fontSize: 30,
+                text: "你可能只是这个世界上的一个人，但对于某些人来说，你就是全世界。",
+                singleSize:42,//单行限制字符数
+                lineHeight:50,
+                fontSize: 28,
                 color: "#fff",//默认 #fff
                 x: 50,//默认  0
                 y: 250
@@ -52,23 +54,22 @@ export default {
         },
         draw() {
             const ctx = document.getElementById('canvas').getContext('2d');
-            this.drawStatic(ctx,this.config.word);
+            this.drawStatic(ctx, this.config.word);
         },
-        drawStatic(ctx,word) {
+        drawStatic(ctx, word) {
             const that = this;
             this._drawImage(ctx, "bgnight", 0, 0, 640, 500, function () {
-                ctx.font = word.fontSize+"px serif";
+                ctx.font = word.fontSize + "px serif";
                 ctx.fillStyle = word.color;
                 const text = ctx.measureText(word.text)
-                if(text.width>640-word.x){
-                    console.log(word.text.length) //切割换行
+                if (text.width > 640 - word.x) {
+                    that.handleLineFeed(ctx, parseInt(word.lineHeight), parseInt(word.singleSize), word.text, parseInt(word.x), parseInt(word.y))
+                    // ctx.fillText("晚安", word.x, word.y + 50);
+                } else {
                     ctx.fillText(word.text, word.x, word.y);
-                    ctx.fillText("晚安", word.x, word.y+50);
-                }else{
-                    ctx.fillText(word.text, word.x, word.y);
-                    ctx.fillText("晚安", word.x, word.y+50);
+                    // ctx.fillText("晚安", word.x, word.y + 50);
                 }
-                
+
                 that.drawDate(ctx);
             });
             this._drawImage(ctx, "logo", 40, 540, 85, 85, null);
@@ -117,6 +118,51 @@ export default {
             ctx.fillText(moment(day).format("YYYY/MM/DD"), 555, 468);
             ctx.font = "14px serif";
             ctx.fillText(this.weekFormat(moment(day).weekday()), 600, 485);
+        },
+        handleLineFeed(ctx, lineheight, bytelength, text, startleft, starttop) {
+            //ctx_2d        getContext("2d") 对象  
+            //lineheight    段落文本行高  
+            //bytelength    设置单字节文字一行内的数量  
+            //text          写入画面的段落文本  
+            //startleft     开始绘制文本的 x 坐标位置（相对于画布）  
+            //starttop      开始绘制文本的 y 坐标位置（相对于画布）  
+            function getTrueLength(str) {//获取字符串的真实长度（字节长度）  
+                var len = str.length, truelen = 0;
+                for (var x = 0; x < len; x++) {
+                    if (str.charCodeAt(x) > 128) {
+                        truelen += 2;
+                    } else {
+                        truelen += 1;
+                    }
+                }
+                return truelen;
+            }
+            function cutString(str, leng) {//按字节长度截取字符串，返回substr截取位置  
+                var len = str.length, tlen = len, nlen = 0;
+                for (var x = 0; x < len; x++) {
+                    if (str.charCodeAt(x) > 128) {
+                        if (nlen + 2 < leng) {
+                            nlen += 2;
+                        } else {
+                            tlen = x;
+                            break;
+                        }
+                    } else {
+                        if (nlen + 1 < leng) {
+                            nlen += 1;
+                        } else {
+                            tlen = x;
+                            break;
+                        }
+                    }
+                }
+                return tlen;
+            }
+            for (var i = 1; getTrueLength(text) > 0; i++) {
+                var tl = cutString(text, bytelength);
+                ctx.fillText(text.substr(0, tl).replace(/^\s+|\s+$/, ""), startleft, (i - 1) * lineheight + starttop);
+                text = text.substr(tl);
+            }
         },
         _drawcirclebg(ctx) {
             //二维码渐变背景 弃用
