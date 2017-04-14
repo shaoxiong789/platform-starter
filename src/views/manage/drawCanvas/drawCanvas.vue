@@ -29,8 +29,9 @@ export default {
             bgImg: "",
             word: {
                 text: "你可能只是这个世界上的一个人，但对于某些人来说，你就是全世界。",
-                singleSize:42,//单行限制字符数
-                lineHeight:50,
+                author: "木清嘉",//选填
+                singleSize: 42,//单行限制字符数
+                lineHeight: 50,
                 fontSize: 28,
                 color: "#fff",//默认 #fff
                 x: 50,//默认  0
@@ -63,11 +64,10 @@ export default {
                 ctx.fillStyle = word.color;
                 const text = ctx.measureText(word.text)
                 if (text.width > 640 - word.x) {
-                    that.handleLineFeed(ctx, parseInt(word.lineHeight), parseInt(word.singleSize), word.text, parseInt(word.x), parseInt(word.y))
-                    // ctx.fillText("晚安", word.x, word.y + 50);
+                    that.handleLineFeed(ctx, word);
                 } else {
                     ctx.fillText(word.text, word.x, word.y);
-                    // ctx.fillText("晚安", word.x, word.y + 50);
+                    this.drawAuthor(ctx, word, word.y + word.lineHeight)
                 }
 
                 that.drawDate(ctx);
@@ -119,13 +119,18 @@ export default {
             ctx.font = "14px serif";
             ctx.fillText(this.weekFormat(moment(day).weekday()), 600, 485);
         },
-        handleLineFeed(ctx, lineheight, bytelength, text, startleft, starttop) {
+        handleLineFeed(ctx, word) {
             //ctx_2d        getContext("2d") 对象  
             //lineheight    段落文本行高  
             //bytelength    设置单字节文字一行内的数量  
             //text          写入画面的段落文本  
             //startleft     开始绘制文本的 x 坐标位置（相对于画布）  
             //starttop      开始绘制文本的 y 坐标位置（相对于画布）  
+            var lineheight = parseInt(word.lineHeight),
+                bytelength = parseInt(word.singleSize),
+                text = word.text,
+                startleft = parseInt(word.x),
+                starttop = parseInt(word.y);
             function getTrueLength(str) {//获取字符串的真实长度（字节长度）  
                 var len = str.length, truelen = 0;
                 for (var x = 0; x < len; x++) {
@@ -158,10 +163,22 @@ export default {
                 }
                 return tlen;
             }
+            var last_i =0;
             for (var i = 1; getTrueLength(text) > 0; i++) {
                 var tl = cutString(text, bytelength);
                 ctx.fillText(text.substr(0, tl).replace(/^\s+|\s+$/, ""), startleft, (i - 1) * lineheight + starttop);
                 text = text.substr(tl);
+                last_i = i;
+            }
+            this.drawAuthor(ctx, word, (last_i- 1)  * lineheight + starttop + word.lineHeight)
+        },
+        drawAuthor(ctx, word, y) {
+            if (word.author != "") {
+                let authorFs = parseInt(word.fontSize) - 4;
+                ctx.font = authorFs + "px serif";
+                ctx.textAlign = "right";
+                ctx.fillText("—— " + word.author, 580, y);
+                ctx.textAlign = "start";
             }
         },
         _drawcirclebg(ctx) {
@@ -193,13 +210,13 @@ export default {
         weekFormat(number) {
             var weekday = "";
             switch (number) {
-                case 0: weekday = "周一"; break;
-                case 1: weekday = "周二"; break;
-                case 2: weekday = "周三"; break;
-                case 3: weekday = "周四"; break;
-                case 4: weekday = "周五"; break;
-                case 5: weekday = "周六"; break;
-                case 6: weekday = "周日"; break;
+                case 1: weekday = "周一"; break;
+                case 2: weekday = "周二"; break;
+                case 3: weekday = "周三"; break;
+                case 4: weekday = "周四"; break;
+                case 5: weekday = "周五"; break;
+                case 6: weekday = "周六"; break;
+                case 7: weekday = "周日"; break;
             }
             return weekday;
         }
