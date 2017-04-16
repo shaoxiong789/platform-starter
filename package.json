@@ -13,7 +13,7 @@
     "moment": "^2.18.1",
     "vue": "^2.1.8",
     "vue-echarts-v3": "^1.0.3",
-    "vue-fullcalendar": "^1.0.9",
+    "vue-fullcalendar": "git://github.com/shaoxiong789/vue-fullcalendar.git#sx-pr",
     "vue-router": "^2.3.0"
   },
   "engines": {

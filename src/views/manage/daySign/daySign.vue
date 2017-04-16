@@ -1,7 +1,7 @@
 <template>
     <div class="comm-wrap">
         <!--<h1>自定义日历</h1>
-         - 节假日 
+         - 节假日
          - 可以显示 是否包含 背景图 和 一句鸡汤-->
       <el-alert
         title="警告提示的文案"
@@ -9,8 +9,8 @@
         description="文字说明文字说明文字说明文字说明文字说明文字说明"
         show-icon>
       </el-alert>
-      <full-calendar class="test-fc" :events="fcEvents" 
-        first-day='1' lang="zh" 
+      <full-calendar class="test-fc" :events="fcEvents"
+        first-day='1' lang="zh"
         @changeMonth="changeMonth"
         @eventClick="eventClick"
         @dayClick="dayClick"
@@ -18,7 +18,7 @@
           <template slot="fc-event-card" scope="scope">
               <p><i class="fa">sadfsd</i> {{ scope }} test</p>
           </template>
-          
+
           <template slot="fc-header-left">
             日签管理日历
           </template>
@@ -39,7 +39,7 @@ let demoEvents = [
     {
       title    : '早图',//早安图
       start    : '2017-04-01',
-      end      : '2017-04-01',
+      end      : '2017-04-10',
       cssClass : 'morningbg',
       id:"",
       type:"A1"
@@ -91,6 +91,7 @@ export default {
   },
   methods : {
     'changeMonth' (start, end, current) {
+      console.log(start,end)
       // console.log('changeMonth',start, end, current)
       // console.log('changeMonth', start.format(), end.format(), current.format())
     },
