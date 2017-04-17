@@ -7,20 +7,19 @@
             {{day}}
         </div>
         <!--<ul>
-            <li>{{day}}</li>
-            <li> -检测有无背景图 无-显示上传编辑背景图， 有-从图片库里选择修改 <br>
-                -图片上传剪切 图片必须是640*500的尺寸
-            </li>
-            <li> -同理检测每一名言 xy 位置 size 大小  可配置</li>
-            - 早安 晚安的 是否显示
-            <li>- 同步右侧预览功能</li>    
-            //检测过期  在今天之前的 没法修改            
-        </ul> -->
+                <li>{{day}}</li>
+                <li> -检测有无背景图 无-显示上传编辑背景图， 有-从图片库里选择修改 <br>
+                    -图片上传剪切 图片必须是640*500的尺寸
+                </li>
+                <li> -同理检测每一名言 xy 位置 size 大小  可配置</li>
+                - 早安 晚安的 是否显示
+                <li>- 同步右侧预览功能</li>    
+                //检测过期  在今天之前的 没法修改            
+            </ul> -->
     
         <div class="ds-item">
             <div class="ds-setting">
-                <el-form :label-position="right"
-                         label-width="80px"
+                <el-form label-width="80px"
                          :model="daySign">
                     <el-form-item>
                         <el-tag type="success">{{daySign.morning.name}}</el-tag>
@@ -89,8 +88,7 @@
     
         <div class="ds-item">
             <div class="ds-setting">
-                <el-form :label-position="right"
-                         label-width="80px"
+                <el-form label-width="80px"
                          :model="daySign">
                     <el-form-item>
                         <el-tag type="warning">{{daySign.night.name}}</el-tag>
@@ -210,7 +208,7 @@ export default {
         }
     },
     methods: {
-        getDate(){
+        getDate() {
             this.daySign.day = JSON.stringify(this.$route.query.day);
             this.day = this.daySign.day;
         },

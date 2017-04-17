@@ -1,7 +1,7 @@
 <template>
     <div class="comm-wrap">
         <!--<h1>自定义日历</h1>
-         - 节假日 
+         - 节假日
          - 可以显示 是否包含 背景图 和 一句鸡汤-->
       <el-alert
         title="警告"
@@ -9,8 +9,8 @@
         description="日期空白的显示需要添加背景图和每日一言"
         show-icon>
       </el-alert>
-      <full-calendar class="test-fc" :events="fcEvents" 
-        first-day='1' lang="zh" 
+      <full-calendar class="test-fc" :events="fcEvents"
+        first-day='1' lang="zh"
         @changeMonth="changeMonth"
         @eventClick="eventClick"
         @dayClick="dayClick"
@@ -18,7 +18,7 @@
           <template slot="fc-event-card" scope="scope">
               <p><i class="fa">sadfsd</i> {{ scope }} test</p>
           </template>
-          
+
           <template slot="fc-header-left">
             日签管理日历
           </template>
@@ -43,6 +43,7 @@ let demoEvents = [
     cssClass: 'done'
   }
 ];
+
 
 var daySign = {
   id: "",
@@ -103,8 +104,8 @@ export default {
       for (let i = 0; i < 42; i++) {
         this.fcEvents.push({
           title: '未完',
-          start: moment(this.start).add(i,"days"),
-          end: moment(this.start).add(i,"days"),
+          start: moment(this.start).add(i, "days"),
+          end: moment(this.start).add(i, "days"),
           cssClass: 'undone'
         });
       }
@@ -139,3 +140,4 @@ export default {
   font-size: 12px;
 }
 </style>
+
