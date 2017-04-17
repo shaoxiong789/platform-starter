@@ -1,14 +1,9 @@
 import VueRouter from 'vue-router'
-import Bar from './views/manage/bar.vue'
-import Foo from './views/manage/foo.vue'
 import Login from './views/manage/login/login.vue'
-import Main from './views/manage/main.vue'
-import WxIndex from './views/weixin/index.vue'
-import WxHome from './views/weixin/home/home.vue'
-import WxHistory from './views/weixin/history/history.vue'
-import WxRankingList from './views/weixin/rankingList/rankingList.vue'
-
+import Manage from './views/manage/main.vue'
 import menus from './menu.js'
+import wxrouter from './routerwx.js'
+
 var menuRouter = [];
 const loginVerify = (to, from, next) => {
   if (1==2) {
@@ -44,29 +39,15 @@ const routers = [
   },
   {
     path: '/',
-    component: Main,
+    component: Manage,
     children: menuRouter,
     beforeEnter: loginVerify
-  },
-  {
-    path: '/weixin',
-    component: WxIndex,
-    children:[
-      {
-        path:'home',
-        component: WxHome
-      },
-      {
-        path:'history',
-        component: WxHistory
-      },
-      {
-        path:'rankingList',
-        component: WxRankingList
-      }
-    ]
   }
+
 ]
+
+routers.push(wxrouter);
+
 const router = (Vue)=>{
   Vue.use(VueRouter)
   const vueRouter = new VueRouter({

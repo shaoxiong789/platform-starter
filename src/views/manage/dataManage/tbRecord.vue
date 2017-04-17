@@ -54,9 +54,9 @@
             <el-pagination @size-change="handleSizeChange"
                            @current-change="handleCurrentChange"
                            :current-page="currentPage"
-                           :page-size="10"
+                           :page-size="pageSize"
                            layout="total,prev, pager, next, jumper"
-                           :total="100">
+                           :total="total">
             </el-pagination>
         </div>        
     </div>
@@ -117,7 +117,9 @@ export default {
             },
             tableData: tableData,
             currentRow: null,
-            currentPage: 1
+            currentPage: 1,
+            pageSize:10,
+            total:100
         }
     },
     mountd (){
