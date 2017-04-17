@@ -209,8 +209,9 @@ export default {
     },
     methods: {
         getDate() {
-            this.daySign.day = JSON.stringify(this.$route.query.day);
-            this.day = this.daySign.day;
+            // this.daySign.day = JSON.stringify(this.$route.query.day);
+            // this.day = this.daySign.day ;
+            this.day = "选择日期为： "+moment(this.$route.query.day).format("YYYY-MM-DD");
         },
         goBack() {
             this.$router.go(-1);
@@ -295,9 +296,11 @@ export default {
 
 .day-info {
     font-size: 16px;
-    margin-left: 90px;
-    float: right;
-    width: 42%;
+    display: inline-block;
+    /*float: left;*/
+    /*width: 42%;*/
+    margin-left:10%;
+    margin-bottom: 10px;
 }
 
 .ds-preview {

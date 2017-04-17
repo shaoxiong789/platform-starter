@@ -6,7 +6,7 @@
       <el-alert
         title="警告"
         type="warning"
-        description="日期空白的显示需要添加背景图和每日一言"
+        description="日期显示【未完】需要添加背景图和每日一言，必须预先设置"
         show-icon>
       </el-alert>
       <full-calendar class="test-fc" :events="fcEvents"
@@ -23,7 +23,7 @@
             日签管理日历
           </template>
           <template slot="fc-header-right">
-            (<span class="fulcalendar-tip"> 友情提示：<span class="tip">点击日历进入详情</span></span>)
+            (<span class="fulcalendar-tip"> 友情提示：<span class="tip">点击日期进入详情</span></span>)
           </template>
           <!--<template slot="fc-body-card">
             修改
@@ -63,12 +63,13 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-      this.mockData();
+      // this.mockData();
     });
   },
   methods: {
     'changeMonth'(start, end, current) {
       this.start = start;
+      this.mockData();
       // console.log('changeMonth',start, end, current)
       // console.log('changeMonth', start.format(), end.format(), current.format())
     },
