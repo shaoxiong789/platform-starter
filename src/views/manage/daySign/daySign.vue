@@ -4,9 +4,9 @@
          - 节假日
          - 可以显示 是否包含 背景图 和 一句鸡汤-->
       <el-alert
-        title="警告提示的文案"
+        title="警告"
         type="warning"
-        description="文字说明文字说明文字说明文字说明文字说明文字说明"
+        description="日期显示【未完】需要添加背景图和每日一言，必须预先设置"
         show-icon>
       </el-alert>
       <full-calendar class="test-fc" :events="fcEvents"
@@ -23,7 +23,7 @@
             日签管理日历
           </template>
           <template slot="fc-header-right">
-            (<span class="fulcalendar-tip"> 友情提示：<span class="tip">点击日历进入详情</span></span>)
+            (<span class="fulcalendar-tip"> 友情提示：<span class="tip">点击日期进入详情</span></span>)
           </template>
           <!--<template slot="fc-body-card">
             修改
@@ -36,108 +36,109 @@
 import moment from 'moment';
 
 let demoEvents = [
-    {
-      title    : '早图',//早安图
-      start    : '2017-04-01',
-      end      : '2017-04-10',
-      cssClass : 'morningbg',
-      id:"",
-      type:"A1"
-    },{
-      title    : '早言',//早安一句话
-      start    : '2017-04-01',
-      end      : '2017-04-01',
-      cssClass : 'morningword',
-      id:"",
-      type:"A2"
-    },{
-      title    : '晚图',//晚安图
-      start    : '2017-04-01',
-      end      : '2017-04-01',
-      cssClass : 'nightbg',
-      id:"",
-      type:"B1"
-    },{
-      title    : '晚言',//晚安一句话
-      start    : '2017-04-01',
-      end      : '2017-04-01',
-      cssClass : 'nightword',
-      id:"",
-      type:"B2"
-    }
-  ];
+  {
+    title: '完成',
+    start: '2017-04-01',
+    end: '2017-04-01',
+    cssClass: 'done'
+  }
+];
+
 
 var daySign = {
-  id:"",
+  id: "",
 
 }
 
 export default {
-	data () {
-		return {
-            radio:'0',
-            name:'',
-            fcEvents : demoEvents
-        }
-	},
-  props:{
-
-  },
-  watch:{
-    'radio'(val, oldVal){
-      console.log(val, oldVal)
-      // this.fcEvents = demoEvents[0];
+  data() {
+    return {
+      start: "",
+      currentDay: new Date(),
+      fcEvents: demoEvents
     }
   },
-  methods : {
-    'changeMonth' (start, end, current) {
-      console.log(start,end)
+  props: {
+
+  },
+  mounted() {
+    this.$nextTick(function () {
+      // this.mockData();
+    });
+  },
+  methods: {
+    'changeMonth'(start, end, current) {
+      this.start = start;
+      this.mockData();
       // console.log('changeMonth',start, end, current)
       // console.log('changeMonth', start.format(), end.format(), current.format())
     },
-    'eventClick' (event, jsEvent, pos) {
+    'eventClick'(event, jsEvent, pos) {
       //  console.log('eventClick', event, jsEvent, pos)
     },
-    'dayClick' (day, jsEvent) {
-      console.log('dayClick', moment(day).format("YYYY-MM-DD hh:mm"), jsEvent)
-      this.$router.push({
-            path:'/manage/daysign/detail',
-            query:{
-              "day":day,
-              "id":null
-            }
-          })
+    'dayClick'(day, jsEvent) {
+      // console.log('dayClick', moment(day).format("YYYY-MM-DD hh:mm"), jsEvent)
+      //检测过期  在今天之前的 没法修改  显示弹出框 过期无法修改
+
+      if (moment(day).isAfter(this.currentDay)) {
+        this.$router.push({
+          path: '/manage/daysign/detail',
+          query: {
+            "day": day
+          }
+        });
+      } else {
+        this.$router.push({
+          path: '/manage/daysign/detailOld',
+          query: {
+            "day": day
+          }
+        })
+      }
+
     },
-    'moreClick' (day, events, jsEvent) {
+    'moreClick'(day, events, jsEvent) {
       // console.log('moreCLick', moment(day).format("YYYY-MM-DD hh:mm"), events, jsEvent)
+    },
+    mockData() {
+      this.fcEvents = [];
+      for (let i = 0; i < 42; i++) {
+        this.fcEvents.push({
+          title: '未完',
+          start: moment(this.start).add(i, "days"),
+          end: moment(this.start).add(i, "days"),
+          cssClass: 'undone'
+        });
+      }
     }
   },
-  components : {
-    'full-calendar' : require('vue-fullcalendar')
+  components: {
+    'full-calendar': require('vue-fullcalendar')
   }
 }
 </script>
 <style>
-  .app{
-    color:green;
-  }
-  .full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item{
-    display:inline-block;
-    padding:0 3px !important;
-  }
-  .morningbg{
-    background-color:greenyellow!important;
-  }
-  .nightbg{
-    background-color:#f7ba2a!important;
-  }
-  .morningword{
-    background-color:green!important;
-  }
-  .nightword{
-    background-color:#ab7904!important;
-  }
-  .fulcalendar-tip{
-    font-size:12px;
-  }
+.app {
+  color: green;
+}
+
+.full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item {
+  display: inline-block;
+  padding: 3px !important;
+  border-radius: 50%;
+  color: #fff!important;
+}
+
+.done {
+  background-color: #71B02F!important;
+}
+
+.undone {
+  background-color: gray!important;
+}
+
+.fulcalendar-tip {
+  font-size: 12px;
+}
 </style>
+

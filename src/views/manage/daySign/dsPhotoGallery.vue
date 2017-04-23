@@ -1,4 +1,5 @@
 <template>
+    <!-- 图片库管理-->
     <div class="comm-wrap">
      <el-tabs type="border-card">
         <el-tab-pane label="早起日签背景">

@@ -11,7 +11,8 @@
                 <el-input v-model="userName"
                           placeholder="请输入用户姓名"></el-input>
             </div>
-            <el-button type="primary" @click="search()"><i class="el-icon-search "></i>  查询</el-button>
+            <el-button type="primary"
+                       @click="search()"><i class="el-icon-search "></i> 查询</el-button>
             <el-button type="primary"
                        class="right">下载表格</el-button>
         </div>
@@ -34,6 +35,11 @@
                              width="180"
                              :formatter="formatDate">
             </el-table-column>
+            <el-table-column prop="totalDays"
+                             sortable
+                             width="150"
+                             label="累计打卡天数">
+            </el-table-column>
             <el-table-column prop="mornintegral"
                              sortable
                              label="早积分">
@@ -42,9 +48,17 @@
                              sortable
                              label="晚积分">
             </el-table-column>
-            <el-table-column prop="medal"
-                             sortable
-                             label="勋章数">
+    
+            <!--<el-table-column label="勋章数">
+                            <el-table-column prop="silver"
+                                             label="银">
+                            </el-table-column>
+                            <el-table-column prop="gold'"
+                                             label="金">
+                            </el-table-column>
+                        </el-table-column>-->
+            <el-table-column label="勋章数"
+                             prop="medal">
             </el-table-column>
             <el-table-column fixed="right"
                              label="操作"
@@ -61,9 +75,9 @@
             <el-pagination @size-change="handleSizeChange"
                            @current-change="handleCurrentChange"
                            :current-page="currentPage"
-                           :page-size="10"
+                           :page-size="pageSize"
                            layout="total,prev, pager, next, jumper"
-                           :total="100">
+                           :total="total">
             </el-pagination>
         </div>
     </div>
@@ -72,75 +86,85 @@
 <script>
 import moment from 'moment';
 let tableData = [{
-    id:"1",
+    id: "1",
     createTime: '2016-05-03',
     name: '王小虎0',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"2",
+    id: "2",
     createTime: '2016-05-02',
     name: '王小虎00',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"3",
+    id: "3",
     createTime: '2016-05-04',
     name: '王小虎1',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"4",
+    id: "4",
     createTime: '2016-05-01',
     name: '王小虎',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"5",
+    id: "5",
     createTime: '2016-05-08',
     name: '王小虎2',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"6",
+    id: "6",
     createTime: '2016-05-06',
     name: '王小虎3',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"7",
+    id: "7",
     createTime: '2016-05-07',
     name: '王小虎4',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"8",
+    id: "8",
     createTime: '2016-05-08',
     name: '王小虎5',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"9",
+    id: "9",
     createTime: '2016-05-06',
     name: '王小虎6',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }, {
-    id:"10",
+    id: "10",
     createTime: '2016-05-07',
     name: '王小虎7',
+    totalDays: "666",
     mornintegral: 0,
     nightintegral: 0,
-    medal:0
+    medal: 0
 }];
 export default {
     data() {
@@ -173,17 +197,19 @@ export default {
                         picker.$emit('pick', [start, end]);
                     }
                 }]
-            },          
+            },
             tableData: tableData,
             currentRow: null,
-            currentPage: 1
+            currentPage: 1,
+            pageSize:10,
+            total:88
         }
     },
-    mountd (){
+    mountd() {
         this.search();//默认全部查询
     },
     methods: {
-        formatDate(row, column){
+        formatDate(row, column) {
             // console.log(row, column)
             return moment(row.date).format("YYYY-MM-DD");
         },
@@ -198,7 +224,7 @@ export default {
             this.$router.push({
                 path: "/manage/datamanage/export/tbUser/personal",
                 query: {
-                    "id":id
+                    "id": id
                 }
             });
         },
@@ -207,7 +233,7 @@ export default {
              * 如姓名为空userName ，则根据dateRange
              * 2这皆空 默认查询所有
              */
-            console.log(this.userName,this.dateRange)
+            console.log(this.userName, this.dateRange)
         },
         searchByUserName() {
 
