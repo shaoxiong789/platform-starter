@@ -4,8 +4,9 @@
   "author": "380449900@qq.com",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server -d --inline --hot --host 0.0.0.0 --port 8080 --env.dev",
-    "build": "rimraf dist && webpack -p --progress --hide-modules"
+    "dev": "webpack-dev-server -d --inline --hot --host 0.0.0.0 --port 8081 --env.dev",
+    "build": "rimraf dist && webpack -p --progress --hide-modules",
+    "start": "node server"
   },
   "dependencies": {
     "awe-dnd": "^0.3.0",
