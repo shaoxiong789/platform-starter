@@ -35,6 +35,7 @@ footer{
     flex-wrap: wrap;
     justify-content: space-between;
     align-content: space-between;
+    background-color:#fff;
 }
 footer a {  
     width: 33%;
