@@ -1,4 +1,4 @@
-import weixinMenu from './views/manage/menu.vue'
+import weixinMenu from './views/manage/menu/menu.vue'
 import subscribe from './views/manage/subscribe.vue'
 import daySign from './views/manage/daySign/daySign.vue'
 import daySignDetail from './views/manage/daySign/daySignDetail.vue'
