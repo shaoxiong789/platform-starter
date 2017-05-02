@@ -1,8 +1,9 @@
 <template>
   <div class="js_textArea inner no_extra">
     <div class="emotion_editor">
-      <div class="edit_area js_editorArea" style="display: none;"></div>
-      <div class="edit_area js_editorArea" contenteditable="true" style="overflow-y: auto; overflow-x: hidden;"></div>
+      <div class="edit_area js_editorArea" contenteditable="true" style="overflow-y: auto; overflow-x: hidden;"
+      @input="changeText($event)" v-text="innerText">
+      </div>
       <div class="editor_toolbar">
         <a href="javascript:void(0);" @click.stop="trigger_emotions" class="icon_emotion emotion_switch js_switch">表情</a>
         <p class="editor_tip js_editorTip">还可以输入<em>600</em>字</p>
@@ -472,10 +473,15 @@
 </template>
 <script>
   import { on, off } from 'element-ui/src/utils/dom';
+  String.prototype.splice = function(idx, rem, str) {
+    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+  };
   export default {
+    props: ['value'],
     data() {
       return {
-        emotions_show: false
+        emotions_show: false,
+        innerText: this.value
       }
     },
     methods: {
@@ -483,6 +489,35 @@
         if(!this.emotions_show){
           this.emotions_show = true;
         }
+      },
+      changeText($event) {
+        this.innerText = $event.currentTarget.innerHTML;
+        this.$emit('input', this.innerText)
+      },
+      getCaretPosition: function() {
+          var oField = this.$el.querySelector('.js_editorArea')
+          var iCaretPos = 0;
+          var doc = oField.ownerDocument || oField.document;
+          var win = doc.defaultView || doc.parentWindow;
+          var sel;
+          if (typeof win.getSelection != "undefined") {
+              sel = win.getSelection();
+              if (sel.rangeCount > 0) {
+                  var range = win.getSelection().getRangeAt(0);
+                  var preCaretRange = range.cloneRange();
+                  preCaretRange.selectNodeContents(oField);
+                  preCaretRange.setEnd(range.endContainer, range.endOffset);
+                  // iCaretPos = preCaretRange.toString().length;
+                  iCaretPos = {startOffset:range.startOffset,endOffset:range.endOffset}
+              }
+          } else if ( (sel = doc.selection) && sel.type !== 'Control') {
+              var textRange = sel.createRange();
+              var preCaretTextRange = doc.body.createTextRange();
+              preCaretTextRange.moveToElementText(oField);
+              preCaretTextRange.setEndPoint('EndToEnd', textRange);
+              iCaretPos = preCaretTextRange.text.length;
+          }
+          return (iCaretPos);
       }
     },
     mounted() {
@@ -491,10 +526,19 @@
           this.emotions_show = false
         }
       });
-      console.log(this.$el)
       this.$el.querySelectorAll('.emotions_item').forEach((el)=> {
         on(el, 'click', ()=>{
-          let emotion = el.querySelector('.js_emotion_i').getAttribute('data-title');
+          let $js_emotion_i = el.querySelector('.js_emotion_i')
+          let emotion = $js_emotion_i.getAttribute('data-title');
+          console.log(this.getCaretPosition())
+          var iCaretPos = this.getCaretPosition()
+          if(iCaretPos==0){
+            this.innerText+=emotion;
+          }else{
+            this.innerText = this.innerText.splice(iCaretPos.startOffset,iCaretPos.endOffset-iCaretPos.startOffset,emotion)
+          }
+          var $js_editorArea = this.$el.querySelector('.js_editorArea')
+          $js_editorArea.focus();
           console.log(emotion)
         })
       })

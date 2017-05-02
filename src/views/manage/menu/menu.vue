@@ -240,7 +240,7 @@
                       </div>
 
                       <div class="tab_content" v-show="true">
-                        <wx-text-area></wx-text-area>
+                        <wx-text-area v-model="text"></wx-text-area>
                       </div>
 
                       <div class="tab_content" v-show="true">
@@ -429,10 +429,10 @@
 <script>
 import WxTextArea from './components/textArea.vue'
 export default {
-  name: 'app',
+  name: 'menu',
   data: function() {
     return {
-
+      text: '1234'
     }
   },
   components: {
