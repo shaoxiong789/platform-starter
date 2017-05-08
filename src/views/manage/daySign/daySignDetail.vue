@@ -25,18 +25,25 @@
                         <el-tag type="success">{{daySign.morning.name}}</el-tag>
                     </el-form-item>
                     <el-form-item label="早安美图">
-                        <el-input v-model="daySign.morning.bg"></el-input>
+                        <el-input v-model="daySign.morning.bg" readonly></el-input>
+                        
+                         <!--<el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
+                            <input type="file" value="" style="visibility:hidden；width:1px;height:1px;" onchange="getImgInfo"></input>
+                         </el-button>-->
+                        <!-- :http-request="submitUpload" -->
                         <el-upload class="upload-demo"
                                    action="http://localhost/api/imager/upload/"
+                                   :multiple="false"                                  
                                    :on-preview="handlePreview"
                                    :before-upload="beforeUpload"
-                                   :auto-upload="false">
-                            <el-button size="mini"
-                                       type="primary">选择图片</el-button>
-                            <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传到服务器</el-button>
+                                   :auto-upload="false"
+                                   @clearFiles ="clearFiles">
+                            <el-button size="mini" slot="trigger"
+                                       type="primary">上传图片</el-button>
+                            <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传到服务器</el-button>                                       
                             <div slot="tip"
                                  class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                        </el-upload>
+                        </el-upload> 
                     </el-form-item>
                     <el-form-item label="早安一言">
                         <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
@@ -83,8 +90,9 @@
                 </el-form>
             </div>
             <div class="ds-preview">
-                <div class="ds-pw-img"><img src="../../../assets/image/t1.png"
-                         class="image"></div>
+                <div class="ds-pw-img" v-if="daySign.morning.prewImage !=''">
+                    <img :src="daySign.morning.prewImage" class="image" >                       
+                </div>
             </div>
         </div>
 
@@ -98,14 +106,14 @@
                                    <!--"-->
                     
                     <el-form-item label="晚安美图">
-                        <el-input v-model="daySign.night.bg"></el-input>
+                        <el-input v-model="daySign.night.bg" readonly></el-input>
                         <el-upload class="upload-demo"
                                    action="http://localhost/api/imager/upload/"
                                    :on-preview="handlePreview"
                                    :before-upload="beforeUpload"
                                    :auto-upload="false">
                             <el-button size="mini"
-                                       type="primary">选择图片</el-button>
+                                       type="primary">上传图片</el-button>
                             <div slot="tip"
                                  class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
@@ -119,11 +127,11 @@
                                 font-size :
                                 <input type="text"
                                        class="comm-input"
-                                       v-model="daySign.morning.word.fontSize"> px
+                                       v-model="daySign.night.word.fontSize"> px
                             </el-col>
                             <el-col :span="11">
                                 color :
-                                <el-color-picker v-model="daySign.morning.word.color"></el-color-picker>
+                                <el-color-picker v-model="daySign.night.word.color"></el-color-picker>
                             </el-col>
                         </el-row>
                         <el-row>
@@ -131,13 +139,13 @@
                                 position.X :
                                 <input type="text"
                                        class="comm-input"
-                                       v-model="daySign.morning.word.x"> px
+                                       v-model="daySign.night.word.x"> px
                             </el-col>
                             <el-col :span="11">
                                 position.Y :
                                 <input type="text"
                                        class="comm-input"
-                                       v-model="daySign.morning.word.y"> px
+                                       v-model="daySign.night.word.y"> px
                             </el-col>
                         </el-row>
                     </el-form-item>
@@ -157,10 +165,11 @@
 
             </div>
             <div class="ds-preview">
-                <div class="ds-pw-img"><img src="../../../assets/image/t1.png"
-                         class="image"></div>
+                <div class="ds-pw-img" v-if="daySign.night.prewImage !=''">
+                    <img :src="daySign.night.prewImage" class="image" >                       
+                </div>
             </div>
-            <canvas id="convertbase64" style="width:640px;height:500px; diaplay:none;"></canvas>
+            <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
         </div>
 
     </div>
@@ -171,6 +180,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            imgBaseURl:" http://oo8xbcend.bkt.clouddn.com/",
             day: '',
             msg1: "",
             msg2: "",
@@ -186,7 +196,8 @@ export default {
                         color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    }
+                    },
+                    prewImage:""
                 },
                 night: {
                     name: "晚安打卡",
@@ -197,10 +208,11 @@ export default {
                         color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    }
+                    },
+                    prewImage:""
                 }
             },
-            prewImage: "../../../assets/image/t1.png",//base64
+            //base64
             file:{}
         }
 
@@ -223,7 +235,7 @@ export default {
             }
           });
           if(response.status==200){
-            console.log("response",response)
+            // console.log("response",response)
             if(response.data.code==1){
               var daySign = response.data.result;
               this.daySign.id = daySign._id;
@@ -281,10 +293,11 @@ export default {
             //非自动保存 不然如何预览
         },
         handlePreview(file) {
+            this.file = file.url;
             console.log("handlePreview",file);
         },
         beforeUpload(file) {
-           this.file= file;
+           this.file = file.url;
            console.log("beforeUpload",file);
             // 检测图片大小 还有 和格式
             const isJPGPNG = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -300,22 +313,40 @@ export default {
             this.msg1 = "友情提示：缺少背景图"; //必须
             this.msg2 = "友情提示：缺少每日名言"
         },
-        submitUpload(){
-           
-            console.log(this.file);
-            const testImg = "http://localhost:8081/assets/ab42929d9ceb8709b988fd08886c652e.png";
+        selectUpload(){
+            
+        },
+        //上传图片自动只截取640*500
+        submitUpload(file){
+            const that = this;
+            console.log(this.file,this.list);
+            const testImg = this.file; 
             this.imgConvertbase64(testImg,function(base64){
                 //this.$refs.upload.submit();
-                // axios.post('api/imager/upload/',{
-                //     'img':base64
-                //     })
-                //     .then(function (response) {
-                //         console.log(response);
-                //     })
-                //     .catch(function (error) {
-                //         console.log(error);
-                //     });
-                console.log(base64)
+                var param = new FormData();
+                param.append('img',base64);
+                // var config = {
+                //     headers:{"Content-Type": "multipart/form-data"}
+                // }
+                axios.post('api/imager/upload/',param)
+                    .then(function (response) {
+                        if(response.data.code == 1){
+                            console.log(response.data.result);
+                            that.daySign.morning.bg = that.imgBaseURl + response.data.result.pathname ;
+                            console.log(that.daySign.morning.bg)
+                            that.daySign.morning.prewImage = that.daySign.morning.bg;
+                            // that.$refs.upload.clearFiles();
+                            // that.$refs.upload.abort();
+                                // pathname: "133bcfad87f563eadb4fed83.png"
+                                // updateTime:"2017-05-08T09:34:44.541Z"
+                                // _id:"133bcfad87f563eadb4fed83"
+                        }
+
+                        
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             });
            
         },
@@ -334,7 +365,8 @@ export default {
             img.src = url; //"./bgnight.png"; // url  实际用URL
             // let img = document.getElementById(id);
             img.onload = function () {
-                ctx.drawImage(img, x, y, w, h);
+                //ctx.drawImage(img, x, y, w, h); //drawImage(image, x, y, width, height)//缩放
+                ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
                 if (callback != null) {
                     callback();
                 }
