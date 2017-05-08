@@ -9,7 +9,7 @@ setInterval(function(){
 
 
 app.use(express.static('dist'));
-var server = app.listen(8081,'127.0.0.1' ,function () {
+var server = app.listen(8081,'0.0.0.0' ,function () {
 
   var host = server.address().address
   var port = server.address().port
