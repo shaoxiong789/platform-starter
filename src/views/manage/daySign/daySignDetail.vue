@@ -27,7 +27,7 @@
                     <el-form-item label="早安美图">
                         <el-input v-model="daySign.morning.bg"></el-input>
                         <el-upload class="upload-demo"
-                                   action="https://jsonplaceholder.typicode.com/posts/"
+                                   action="http://localhost/api/imager/upload/"
                                    :on-preview="handlePreview"
                                    :before-upload="beforeUpload">
                             <el-button size="mini"
@@ -96,7 +96,7 @@
                     <el-form-item label="晚安美图">
                         <el-input v-model="daySign.night.bg"></el-input>
                         <el-upload class="upload-demo"
-                                   action="https://jsonplaceholder.typicode.com/posts/"
+                                   action="http://localhost/api/imager/upload/"
                                    :on-preview="handlePreview"
                                    :before-upload="beforeUpload">
                             <el-button size="mini"
