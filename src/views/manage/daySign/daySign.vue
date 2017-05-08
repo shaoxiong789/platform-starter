@@ -79,22 +79,27 @@ export default {
     'dayClick'(day, jsEvent) {
       // console.log('dayClick', moment(day).format("YYYY-MM-DD hh:mm"), jsEvent)
       //检测过期  在今天之前的 没法修改  显示弹出框 过期无法修改
-
-      if (moment(day).isAfter(this.currentDay)) {
-        this.$router.push({
-          path: '/manage/daysign/detail',
-          query: {
-            "day": day
-          }
-        });
-      } else {
-        this.$router.push({
-          path: '/manage/daysign/detailOld',
-          query: {
-            "day": day
-          }
-        })
-      }
+      this.$router.push({
+        path: '/manage/daysign/detail',
+        query: {
+          "day": moment(day).format("YYYY-MM-DD")
+        }
+      });
+      // if (moment(day).isAfter(this.currentDay)) {
+      //   this.$router.push({
+      //     path: '/manage/daysign/detail',
+      //     query: {
+      //       "day": moment(day).format("YYYY-MM-DD")
+      //     }
+      //   });
+      // } else {
+      //   this.$router.push({
+      //     path: '/manage/daysign/detailOld',
+      //     query: {
+      //       "day": moment(day).format("YYYY-MM-DD")
+      //     }
+      //   })
+      // }
 
     },
     'moreClick'(day, events, jsEvent) {
@@ -141,4 +146,3 @@ export default {
   font-size: 12px;
 }
 </style>
-

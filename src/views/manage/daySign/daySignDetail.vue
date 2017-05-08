@@ -13,10 +13,10 @@
                 </li>
                 <li> -同理检测每一名言 xy 位置 size 大小  可配置</li>
                 - 早安 晚安的 是否显示
-                <li>- 同步右侧预览功能</li>    
-                //检测过期  在今天之前的 没法修改            
+                <li>- 同步右侧预览功能</li>
+                //检测过期  在今天之前的 没法修改
             </ul> -->
-    
+
         <div class="ds-item">
             <div class="ds-setting">
                 <el-form label-width="80px"
@@ -85,7 +85,7 @@
                          class="image"></div>
             </div>
         </div>
-    
+
         <div class="ds-item">
             <div class="ds-setting">
                 <el-form label-width="80px"
@@ -147,21 +147,21 @@
                                    @click="save('night')">保存</el-button>
                         <span class="tip">{{msg2}}</span>
                     </el-form-item>
-    
+
                 </el-form>
-    
+
             </div>
             <div class="ds-preview">
                 <div class="ds-pw-img"><img src="../../../assets/image/t1.png"
                          class="image"></div>
             </div>
         </div>
-    
+
     </div>
 </template>
 <script>
 import moment from 'moment';
-
+import axios from 'axios';
 export default {
     data() {
         return {
@@ -198,8 +198,10 @@ export default {
         }
 
     },
-    created() {
-        this.getDate()
+    async created() {
+        this.getDate();
+        await this.getDaySign();
+
     },
     watch: {
         'radio'(val, oldVal) {
@@ -208,6 +210,43 @@ export default {
         }
     },
     methods: {
+        async getDaySign(){
+          var response = await axios.get('/api/clock/calendar/detail', {
+            params: {
+              day: moment(this.$route.query.day).format("YYYY-MM-DD")
+            }
+          });
+          if(response.status==200){
+            console.log(response)
+            if(response.data.code==1){
+              var daySign = response.data.result;
+              this.daySign.id = daySign._id;
+              this.daySign.day = daySign.day;
+              if(daySign.morning){
+                this.daySign.morning.bg = daySign.morning.bg;
+                if(daySign.morning.word){
+                  this.daySign.morning.word.text = daySign.morning.word.text;
+                  this.daySign.morning.word.fontSize = daySign.morning.word.fontSize;
+                  this.daySign.morning.word.color = daySign.morning.word.color;
+                  this.daySign.morning.word.x = daySign.morning.word.x;
+                  this.daySign.morning.word.y = daySign.morning.word.y;
+                }
+              }
+              if(daySign.night){
+                this.daySign.night.bg = daySign.night.bg;
+                if(daySign.night.word){
+                  this.daySign.night.word.text = daySign.morning.word.text;
+                  this.daySign.night.word.fontSize = daySign.night.word.fontSize;
+                  this.daySign.night.word.color = daySign.night.word.color;
+                  this.daySign.night.word.x = daySign.night.word.x;
+                  this.daySign.night.word.y = daySign.night.word.y;
+                }
+              }
+
+              // this.daySign = response.data.result
+            }
+          }
+        },
         getDate() {
             // this.daySign.day = JSON.stringify(this.$route.query.day);
             // this.day = this.daySign.day ;
