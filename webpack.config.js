@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const url = require('url')
 const publicPath = ''
+require('babel-polyfill')
 
 module.exports = (options = {}) => ({
   entry: {
