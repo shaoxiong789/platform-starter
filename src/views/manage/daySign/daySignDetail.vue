@@ -36,8 +36,7 @@
                                    :multiple="false"                                  
                                    :on-preview="handlePreview"
                                    :before-upload="beforeUpload"
-                                   :auto-upload="false"
-                                   @clearFiles ="clearFiles">
+                                   :auto-upload="false">
                             <el-button size="mini" slot="trigger"
                                        type="primary">上传图片</el-button>
                             <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传到服务器</el-button>                                       
@@ -212,7 +211,6 @@ export default {
                     prewImage:""
                 }
             },
-            //base64
             file:{}
         }
 
@@ -317,9 +315,9 @@ export default {
             
         },
         //上传图片自动只截取640*500
-        submitUpload(file){
+        submitUpload(){
             const that = this;
-            console.log(this.file,this.list);
+            console.log("this.file",this.file);
             const testImg = this.file; 
             this.imgConvertbase64(testImg,function(base64){
                 //this.$refs.upload.submit();
