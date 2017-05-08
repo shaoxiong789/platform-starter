@@ -1,5 +1,6 @@
 <template>
     <div class="record-wrap">
+        <div class="circle-bottom" :class="{'sun':isMorning,'moon':!isMorning}"></div>
         <div class="user-info " :class="{'sun':isMorning,'moon':!isMorning}">
             <span class="logo">
                         <img src="../logo.png" alt="logo">
@@ -193,47 +194,63 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
 .record-wrap {
     font-family: serif;
+    position:relative;
 }
 
-.user-info {
+.record-wrap .user-info {
     text-align: center;
     border-radius: 0px 0px 0% 0%;
     padding: 20px 2% 0px 2%;
 }
 
-.user-info .logo {
+.record-wrap .user-info .logo {
     display: inline-block;
     vertical-align: middle;
 }
 
-.user-info .user-right {
+.record-wrap .user-info .user-right {
     display: inline-block;
     color: #fff;
     vertical-align: middle;
     text-align: left;
 }
 
-.user-info .user-name {
+.record-wrap .user-info .user-name {
     font-size: 16px;
     display: block;
     line-height: 20px;
 }
 
-.user-info .msg-info {
+.record-wrap .user-info .msg-info {
     font-size: 12px;
     display: block
 }
 
-.user-info.sun {
+.record-wrap .user-info.sun {
     background-color: #e1af46;
 }
-.user-info.moon {
+.record-wrap .user-info.moon {
     background-color: #32a7f6;
 }
-.logo img {
+.circle-bottom{
+    position:absolute;
+    border-radius:50%;
+    width:100%;
+    padding:0 50px;
+    height:200px;
+    margin-left:-50px;
+    bottom:-40px;
+}
+.circle-bottom.sun{
+     background-color: #e1af46;
+}
+.circle-bottom.moon{
+     background-color: #32a7f6;
+}
+.record-wrap .logo img {
     width: 55px;
     height: 55px;
 }
@@ -244,6 +261,7 @@ export default {
     border-radius: 4px;
     margin: 20px 0;
     background-color: #ddd;
+    text-align:center;
 }
 
 .ds-tabs > span {
@@ -301,4 +319,5 @@ export default {
 .line-chart{
     height:200px;
 }
+
 </style>

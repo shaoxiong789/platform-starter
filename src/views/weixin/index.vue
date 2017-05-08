@@ -15,7 +15,27 @@
 export default {
     data() {
         return {
-
+            resultList:[{
+                logo:"",
+                userName:"哇哈哈",
+                totalDays:24,
+                zanNums:37
+            },{
+                logo:"",
+                userName:"叮叮当",
+                totalDays:24,
+                zanNums:11
+            },{
+                logo:"",
+                userName:"一枝梅",
+                totalDays:24,
+                zanNums:3
+            },{
+                logo:"",
+                userName:"可爱小孩",
+                totalDays:24,
+                zanNums:1
+            }]
         }
     }
 }
@@ -23,7 +43,7 @@ export default {
 <style>
 .weixin-wrap{
     height:100%;
-    padding-bottom:100px;
+    padding-bottom:50px;
 }
 footer{
     width: 100%;
