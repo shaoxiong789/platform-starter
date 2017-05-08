@@ -29,9 +29,11 @@
                         <el-upload class="upload-demo"
                                    action="http://localhost/api/imager/upload/"
                                    :on-preview="handlePreview"
-                                   :before-upload="beforeUpload">
+                                   :before-upload="beforeUpload"
+                                   :auto-upload="false">
                             <el-button size="mini"
-                                       type="primary">点击上传</el-button>
+                                       type="primary">选择图片</el-button>
+                            <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传到服务器</el-button>
                             <div slot="tip"
                                  class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
@@ -93,14 +95,17 @@
                     <el-form-item>
                         <el-tag type="warning">{{daySign.night.name}}</el-tag>
                     </el-form-item>
+                                   <!--"-->
+                    
                     <el-form-item label="晚安美图">
                         <el-input v-model="daySign.night.bg"></el-input>
                         <el-upload class="upload-demo"
                                    action="http://localhost/api/imager/upload/"
                                    :on-preview="handlePreview"
-                                   :before-upload="beforeUpload">
+                                   :before-upload="beforeUpload"
+                                   :auto-upload="false">
                             <el-button size="mini"
-                                       type="primary">点击上传</el-button>
+                                       type="primary">选择图片</el-button>
                             <div slot="tip"
                                  class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
@@ -155,6 +160,7 @@
                 <div class="ds-pw-img"><img src="../../../assets/image/t1.png"
                          class="image"></div>
             </div>
+            <canvas id="convertbase64" style="width:640px;height:500px; diaplay:none;"></canvas>
         </div>
 
     </div>
@@ -173,41 +179,41 @@ export default {
                 day: "",
                 morning: {
                     name: "早起打卡",
-                    bg: "../../../assets/image/t1.png",
+                    bg: "",
                     word: {
-                        text: "早安",
+                        text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     }
                 },
                 night: {
                     name: "晚安打卡",
-                    bg: "../../../assets/image/t1.png",
+                    bg: "",
                     word: {
-                        text: "早安",
+                        text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     }
                 }
             },
             prewImage: "../../../assets/image/t1.png",//base64
+            file:{}
         }
 
     },
     async created() {
         this.getDate();
         await this.getDaySign();
-
     },
     watch: {
-        'radio'(val, oldVal) {
-            console.log(val, oldVal)
-            this.openWarning();
-        }
+        // 'radio'(val, oldVal) {
+        //     console.log(val, oldVal)
+        //     this.openWarning();
+        // }
     },
     methods: {
         async getDaySign(){
@@ -217,7 +223,7 @@ export default {
             }
           });
           if(response.status==200){
-            console.log(response)
+            console.log("response",response)
             if(response.data.code==1){
               var daySign = response.data.result;
               this.daySign.id = daySign._id;
@@ -235,6 +241,7 @@ export default {
               if(daySign.night){
                 this.daySign.night.bg = daySign.night.bg;
                 if(daySign.night.word){
+                  //this.daySign.night.word = daySign.morning.word ;
                   this.daySign.night.word.text = daySign.morning.word.text;
                   this.daySign.night.word.fontSize = daySign.night.word.fontSize;
                   this.daySign.night.word.color = daySign.night.word.color;
@@ -274,9 +281,11 @@ export default {
             //非自动保存 不然如何预览
         },
         handlePreview(file) {
-            console.log(file);
+            console.log("handlePreview",file);
         },
         beforeUpload(file) {
+           this.file= file;
+           console.log("beforeUpload",file);
             // 检测图片大小 还有 和格式
             const isJPGPNG = file.type === 'image/jpeg' || file.type === 'image/png';
             const isLt2M = file.size / 1024 / 1024 < 0.5;
@@ -290,6 +299,46 @@ export default {
             //点击预览 报错 出现友情提示 msg1 msg1
             this.msg1 = "友情提示：缺少背景图"; //必须
             this.msg2 = "友情提示：缺少每日名言"
+        },
+        submitUpload(){
+           
+            console.log(this.file);
+            const testImg = "http://localhost:8081/assets/ab42929d9ceb8709b988fd08886c652e.png";
+            this.imgConvertbase64(testImg,function(base64){
+                //this.$refs.upload.submit();
+                // axios.post('api/imager/upload/',{
+                //     'img':base64
+                //     })
+                //     .then(function (response) {
+                //         console.log(response);
+                //     })
+                //     .catch(function (error) {
+                //         console.log(error);
+                //     });
+                console.log(base64)
+            });
+           
+        },
+        imgConvertbase64(url,cb){
+            var canvas = document.getElementById('convertbase64');
+            const ctx = canvas.getContext('2d');
+            this._drawImage(ctx, url, 0, 0, 640, 500, function () {                
+                const base64 = canvas.toDataURL();
+                cb(base64);
+            });
+
+        },
+        _drawImage(ctx, url, x, y, w, h, callback) {
+            //  draw bgImg
+            let img = new Image();
+            img.src = url; //"./bgnight.png"; // url  实际用URL
+            // let img = document.getElementById(id);
+            img.onload = function () {
+                ctx.drawImage(img, x, y, w, h);
+                if (callback != null) {
+                    callback();
+                }
+            }
         },
         save(flag) {
 

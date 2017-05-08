@@ -3,12 +3,11 @@
         <div class="circle-bottom" :class="{'sun':isMorning,'moon':!isMorning}"></div>
         <div class="user-info " :class="{'sun':isMorning,'moon':!isMorning}">
             <span class="logo">
-                        <img src="../logo.png" alt="logo">
-                    </span>
+                <img src="../logo.png" alt="logo">
+            </span>
             <span class="user-right"> 
-                    <span class="user-name" v-text="result.name"></span>
-            <span class="msg-info"
-                  v-text="msg"></span>
+                <span class="user-name" v-text="result.name"></span>
+                <span class="msg-info" v-text="msg"></span>
             </span>
     
             <div class="ds-tabs">
