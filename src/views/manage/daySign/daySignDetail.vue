@@ -32,9 +32,12 @@
                          </el-button>-->
                         <!-- :http-request="submitUpload" -->
                         <el-upload class="upload-demo"
+                                   ref="upload"
                                    action="http://localhost/api/imager/upload/"
-                                   :multiple="false"                                  
+                                   :multiple="false"
+                                   :on-change ="onchange"                                 
                                    :on-preview="handlePreview"
+                                   :on-remove="handleRemove"
                                    :before-upload="beforeUpload"
                                    :auto-upload="false">
                             <el-button size="mini" slot="trigger"
@@ -102,7 +105,6 @@
                     <el-form-item>
                         <el-tag type="warning">{{daySign.night.name}}</el-tag>
                     </el-form-item>
-                                   <!--"-->
                     
                     <el-form-item label="晚安美图">
                         <el-input v-model="daySign.night.bg" readonly></el-input>
@@ -110,7 +112,8 @@
                                    action="http://localhost/api/imager/upload/"
                                    :on-preview="handlePreview"
                                    :before-upload="beforeUpload"
-                                   :auto-upload="false">
+                                   :auto-upload="false"
+                                   :show-file-list="false">
                             <el-button size="mini"
                                        type="primary">上传图片</el-button>
                             <div slot="tip"
@@ -192,7 +195,7 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "",//默认 #fff
+                        color: "#fff",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
@@ -204,7 +207,7 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "",//默认 #fff
+                        color: "#fff",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
@@ -290,13 +293,21 @@ export default {
             });
             //非自动保存 不然如何预览
         },
+        onchange(file,fileList){
+            this.file = file.url;
+            // console.log("onchange",file);
+        },
         handlePreview(file) {
             this.file = file.url;
-            console.log("handlePreview",file);
+            // console.log("handlePreview",file);
+        },
+        handleRemove(file) {
+            this.file = file.url;
+            console.log("handleRemove",file);
         },
         beforeUpload(file) {
            this.file = file.url;
-           console.log("beforeUpload",file);
+        //    console.log("beforeUpload",file);
             // 检测图片大小 还有 和格式
             const isJPGPNG = file.type === 'image/jpeg' || file.type === 'image/png';
             const isLt2M = file.size / 1024 / 1024 < 0.5;
@@ -314,11 +325,13 @@ export default {
         selectUpload(){
             
         },
-        //上传图片自动只截取640*500
+        //上传图片自动只截取640*500 多图叠加
         submitUpload(){
+            // this.$refs.upload.handleChange();
             const that = this;
             console.log("this.file",this.file);
             const testImg = this.file; 
+            console.log("this.$refs.upload",this.$refs.upload);
             this.imgConvertbase64(testImg,function(base64){
                 //this.$refs.upload.submit();
                 var param = new FormData();
@@ -333,7 +346,7 @@ export default {
                             that.daySign.morning.bg = that.imgBaseURl + response.data.result.pathname ;
                             console.log(that.daySign.morning.bg)
                             that.daySign.morning.prewImage = that.daySign.morning.bg;
-                            // that.$refs.upload.clearFiles();
+                            that.$refs.upload.clearFiles();
                             // that.$refs.upload.abort();
                                 // pathname: "133bcfad87f563eadb4fed83.png"
                                 // updateTime:"2017-05-08T09:34:44.541Z"
