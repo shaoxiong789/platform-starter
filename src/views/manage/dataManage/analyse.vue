@@ -29,7 +29,7 @@
                 <IEcharts :option="piemorn"></IEcharts>
             </div>
             <div class="comm-right">
-                    <IEcharts :option="pienight"></IEcharts>
+                <IEcharts :option="pienight"></IEcharts>
             </div>
         </div>    
         <br/>

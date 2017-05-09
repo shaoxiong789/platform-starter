@@ -23,7 +23,7 @@
             日签管理日历
           </template>
           <template slot="fc-header-right">
-            (<span class="fulcalendar-tip"> 友情提示：<span class="tip">点击日期进入详情</span></span>)
+            (<span class="fulcalendar-tip"> 提示：<span class="tip">点击日期进入详情</span></span>)
           </template>
           <!--<template slot="fc-body-card">
             修改
@@ -54,6 +54,7 @@ export default {
   data() {
     return {
       start: "",
+      systemDay: "2017-4-1",//系统创建日期
       currentDay: new Date(),
       fcEvents: demoEvents
     }
@@ -79,27 +80,38 @@ export default {
     'dayClick'(day, jsEvent) {
       // console.log('dayClick', moment(day).format("YYYY-MM-DD hh:mm"), jsEvent)
       //检测过期  在今天之前的 没法修改  显示弹出框 过期无法修改
+
+      // if (!moment(day).isBefore(this.systemDay)) {
+      //   if (moment(day).isAfter(this.currentDay)) {
+      //     this.$router.push({
+      //       path: '/manage/daysign/detail',
+      //       query: {
+      //         "day": day
+      //       }
+      //     });
+      //   } else {
+      //     this.$router.push({
+      //       path: '/manage/daysign/detailOld',
+      //       query: {
+      //         "day": day
+      //       }
+      //     })
+      //   }
+      // } else {
+      //   this.$message({
+      //     type: 'warning',
+      //     message: '本系统从'+this.systemDay+"开始启用，之前无数据。"
+      //   });
+      // }
+
       this.$router.push({
         path: '/manage/daysign/detail',
         query: {
           "day": moment(day).format("YYYY-MM-DD")
         }
       });
-      // if (moment(day).isAfter(this.currentDay)) {
-      //   this.$router.push({
-      //     path: '/manage/daysign/detail',
-      //     query: {
-      //       "day": moment(day).format("YYYY-MM-DD")
-      //     }
-      //   });
-      // } else {
-      //   this.$router.push({
-      //     path: '/manage/daysign/detailOld',
-      //     query: {
-      //       "day": moment(day).format("YYYY-MM-DD")
-      //     }
-      //   })
-      // }
+
+
 
     },
     'moreClick'(day, events, jsEvent) {
@@ -108,12 +120,24 @@ export default {
     mockData() {
       this.fcEvents = [];
       for (let i = 0; i < 42; i++) {
-        this.fcEvents.push({
-          title: '未完',
-          start: moment(this.start).add(i, "days"),
-          end: moment(this.start).add(i, "days"),
-          cssClass: 'undone'
-        });
+        const temp = moment(this.start).add(i, "days");
+        if (!temp.isBefore(this.systemDay)) {
+          this.fcEvents.push({
+            title: '未设置',
+            start: temp,
+            end: temp,
+            cssClass: 'undone'
+          });
+        } else {
+          this.fcEvents.push({
+            title: '无',
+            start: temp,
+            end: temp,
+            cssClass: 'none'
+          });
+        }
+
+
       }
     }
   },
@@ -140,6 +164,10 @@ export default {
 
 .undone {
   background-color: gray!important;
+}
+
+.none {
+  background-color: #ddd!important;
 }
 
 .fulcalendar-tip {

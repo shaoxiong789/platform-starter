@@ -25,16 +25,24 @@
                         <el-tag type="success">{{daySign.morning.name}}</el-tag>
                     </el-form-item>
                     <el-form-item label="早安美图">
-                        <el-input v-model="daySign.morning.bg"></el-input>
+                        <el-input v-model="daySign.morning.bg" readonly></el-input>
+                        
+                         <!--<el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
+                            <input type="file" value="" style="visibility:hidden；width:1px;height:1px;" onchange="getImgInfo"></input>
+                         </el-button>-->
+                        <!-- :http-request="submitUpload" -->
                         <el-upload class="upload-demo"
                                    action="http://localhost/api/imager/upload/"
+                                   :multiple="false"                                  
                                    :on-preview="handlePreview"
-                                   :before-upload="beforeUpload">
-                            <el-button size="mini"
-                                       type="primary">点击上传</el-button>
+                                   :before-upload="beforeUpload"
+                                   :auto-upload="false">
+                            <el-button size="mini" slot="trigger"
+                                       type="primary">上传图片</el-button>
+                            <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传到服务器</el-button>                                       
                             <div slot="tip"
                                  class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                        </el-upload>
+                        </el-upload> 
                     </el-form-item>
                     <el-form-item label="早安一言">
                         <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
@@ -81,8 +89,9 @@
                 </el-form>
             </div>
             <div class="ds-preview">
-                <div class="ds-pw-img"><img src="../../../assets/image/t1.png"
-                         class="image"></div>
+                <div class="ds-pw-img" v-if="daySign.morning.prewImage !=''">
+                    <img :src="daySign.morning.prewImage" class="image" >                       
+                </div>
             </div>
         </div>
 
@@ -93,14 +102,17 @@
                     <el-form-item>
                         <el-tag type="warning">{{daySign.night.name}}</el-tag>
                     </el-form-item>
+                                   <!--"-->
+                    
                     <el-form-item label="晚安美图">
-                        <el-input v-model="daySign.night.bg"></el-input>
+                        <el-input v-model="daySign.night.bg" readonly></el-input>
                         <el-upload class="upload-demo"
                                    action="http://localhost/api/imager/upload/"
                                    :on-preview="handlePreview"
-                                   :before-upload="beforeUpload">
+                                   :before-upload="beforeUpload"
+                                   :auto-upload="false">
                             <el-button size="mini"
-                                       type="primary">点击上传</el-button>
+                                       type="primary">上传图片</el-button>
                             <div slot="tip"
                                  class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
@@ -114,11 +126,11 @@
                                 font-size :
                                 <input type="text"
                                        class="comm-input"
-                                       v-model="daySign.morning.word.fontSize"> px
+                                       v-model="daySign.night.word.fontSize"> px
                             </el-col>
                             <el-col :span="11">
                                 color :
-                                <el-color-picker v-model="daySign.morning.word.color"></el-color-picker>
+                                <el-color-picker v-model="daySign.night.word.color"></el-color-picker>
                             </el-col>
                         </el-row>
                         <el-row>
@@ -126,13 +138,13 @@
                                 position.X :
                                 <input type="text"
                                        class="comm-input"
-                                       v-model="daySign.morning.word.x"> px
+                                       v-model="daySign.night.word.x"> px
                             </el-col>
                             <el-col :span="11">
                                 position.Y :
                                 <input type="text"
                                        class="comm-input"
-                                       v-model="daySign.morning.word.y"> px
+                                       v-model="daySign.night.word.y"> px
                             </el-col>
                         </el-row>
                     </el-form-item>
@@ -152,9 +164,11 @@
 
             </div>
             <div class="ds-preview">
-                <div class="ds-pw-img"><img src="../../../assets/image/t1.png"
-                         class="image"></div>
+                <div class="ds-pw-img" v-if="daySign.night.prewImage !=''">
+                    <img :src="daySign.night.prewImage" class="image" >                       
+                </div>
             </div>
+            <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
         </div>
 
     </div>
@@ -165,6 +179,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            imgBaseURl:" http://oo8xbcend.bkt.clouddn.com/",
             day: '',
             msg1: "",
             msg2: "",
@@ -173,41 +188,42 @@ export default {
                 day: "",
                 morning: {
                     name: "早起打卡",
-                    bg: "../../../assets/image/t1.png",
+                    bg: "",
                     word: {
-                        text: "早安",
+                        text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    }
+                    },
+                    prewImage:""
                 },
                 night: {
                     name: "晚安打卡",
-                    bg: "../../../assets/image/t1.png",
+                    bg: "",
                     word: {
-                        text: "早安",
+                        text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    }
+                    },
+                    prewImage:""
                 }
             },
-            prewImage: "../../../assets/image/t1.png",//base64
+            file:{}
         }
 
     },
     async created() {
         this.getDate();
         await this.getDaySign();
-
     },
     watch: {
-        'radio'(val, oldVal) {
-            console.log(val, oldVal)
-            this.openWarning();
-        }
+        // 'radio'(val, oldVal) {
+        //     console.log(val, oldVal)
+        //     this.openWarning();
+        // }
     },
     methods: {
         async getDaySign(){
@@ -217,7 +233,7 @@ export default {
             }
           });
           if(response.status==200){
-            console.log(response)
+            // console.log("response",response)
             if(response.data.code==1){
               var daySign = response.data.result;
               this.daySign.id = daySign._id;
@@ -235,6 +251,7 @@ export default {
               if(daySign.night){
                 this.daySign.night.bg = daySign.night.bg;
                 if(daySign.night.word){
+                  //this.daySign.night.word = daySign.morning.word ;
                   this.daySign.night.word.text = daySign.morning.word.text;
                   this.daySign.night.word.fontSize = daySign.night.word.fontSize;
                   this.daySign.night.word.color = daySign.night.word.color;
@@ -274,9 +291,12 @@ export default {
             //非自动保存 不然如何预览
         },
         handlePreview(file) {
-            console.log(file);
+            this.file = file.url;
+            console.log("handlePreview",file);
         },
         beforeUpload(file) {
+           this.file = file.url;
+           console.log("beforeUpload",file);
             // 检测图片大小 还有 和格式
             const isJPGPNG = file.type === 'image/jpeg' || file.type === 'image/png';
             const isLt2M = file.size / 1024 / 1024 < 0.5;
@@ -290,6 +310,65 @@ export default {
             //点击预览 报错 出现友情提示 msg1 msg1
             this.msg1 = "友情提示：缺少背景图"; //必须
             this.msg2 = "友情提示：缺少每日名言"
+        },
+        selectUpload(){
+            
+        },
+        //上传图片自动只截取640*500
+        submitUpload(){
+            const that = this;
+            console.log("this.file",this.file);
+            const testImg = this.file; 
+            this.imgConvertbase64(testImg,function(base64){
+                //this.$refs.upload.submit();
+                var param = new FormData();
+                param.append('img',base64);
+                // var config = {
+                //     headers:{"Content-Type": "multipart/form-data"}
+                // }
+                axios.post('api/imager/upload/',param)
+                    .then(function (response) {
+                        if(response.data.code == 1){
+                            console.log(response.data.result);
+                            that.daySign.morning.bg = that.imgBaseURl + response.data.result.pathname ;
+                            console.log(that.daySign.morning.bg)
+                            that.daySign.morning.prewImage = that.daySign.morning.bg;
+                            // that.$refs.upload.clearFiles();
+                            // that.$refs.upload.abort();
+                                // pathname: "133bcfad87f563eadb4fed83.png"
+                                // updateTime:"2017-05-08T09:34:44.541Z"
+                                // _id:"133bcfad87f563eadb4fed83"
+                        }
+
+                        
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            });
+           
+        },
+        imgConvertbase64(url,cb){
+            var canvas = document.getElementById('convertbase64');
+            const ctx = canvas.getContext('2d');
+            this._drawImage(ctx, url, 0, 0, 640, 500, function () {                
+                const base64 = canvas.toDataURL();
+                cb(base64);
+            });
+
+        },
+        _drawImage(ctx, url, x, y, w, h, callback) {
+            //  draw bgImg
+            let img = new Image();
+            img.src = url; //"./bgnight.png"; // url  实际用URL
+            // let img = document.getElementById(id);
+            img.onload = function () {
+                //ctx.drawImage(img, x, y, w, h); //drawImage(image, x, y, width, height)//缩放
+                ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+                if (callback != null) {
+                    callback();
+                }
+            }
         },
         save(flag) {
 
