@@ -2,62 +2,45 @@
     <!-- 图片库管理-->
     <div class="comm-wrap">
      <el-tabs type="border-card">
-        <el-tab-pane label="早起日签背景">
+        <el-tab-pane label="图片库管理">
             <ul>
-                <li>今日时间：<time>{{dateNow}}</time></li>
-                <li>日签背景图还剩余：{{leftNum}}张</li>
-                <li>(如果剩余为零，随机从前边的日子的图片取)</li>
-            </ul>
-            <el-upload
-                class="upload upload-morn"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :file-list="fileList2"
-                :before-upload="beforeUpload"
-                list-type="picture">
-                <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
-            </el-upload>           
+                <li v-for="item in ImagesList" >
+                    <input type="button" @click="deleteImage" value="删除">
+                    <span>ID:{{item._id}}</span>
+                    <!--<img alt="" :src="imgBaseURl+item._id+'.png'" width="64" height="50">-->
+                </li>
+            </ul> 
+
+
+
         </el-tab-pane>
-        <el-tab-pane label="晚安日签背景">
-            <ul>
-                <li>今日时间：<time>{{dateNow}}</time></li>
-                <li>日签背景图还剩余：{{leftNum}}张</li>
-                <li>(如果剩余为零，随机从前边的日子的图片取)</li>
-            </ul>
-             <el-upload
-                class="upload upload-night"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :file-list="fileList2"
-                :before-upload="beforeUpload"
-                list-type="picture">
-                <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
-            </el-upload>           
-        </el-tab-pane>
+
+        <div class="pagination">
+                <el-pagination @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-size="pageSize"
+                            layout="total,prev, pager, next, jumper"
+                            :total="total">
+                </el-pagination>
+            </div>
     </el-tabs>   
 
     </div>
 </template>
 
 <script>
+import axios from 'axios';
   export default {
     data() {
       return {
+        imgBaseURl:" http://oo8xbcend.bkt.clouddn.com/",
         dateNow:'',
-        leftNum:0,
-        fileList2: [
-            {
-                name: 'food.jpeg', 
-                url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-            }, 
-            {
-                name: 'food2.jpeg', 
-                url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
-            ]
+        ImagesList:[],
+        currentPage: 1,
+        pageSize:10,
+        total:100
+        
       };
     },
     mounted:function(){
@@ -67,26 +50,54 @@
         })
     },
     methods: {
-      init:function(){
-        //查询剩余日签背景图片情况
-        
-      },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
-      beforeUpload(file) {
-          // 检测图片大小 还有 和格式
-        const isJPGPNG = file.type === 'image/jpeg'||file.type === 'image/png';  
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2M!');
+        init:function(){
+            this.page();
+        },
+        page(){
+            var vm = this;
+            //查询上传的背景图情况
+            axios.get('api/imager/list', {
+                params: {
+                    currentPage: this.currentPage,
+                    pageSize:this.pageSize
+                }
+            })
+            .then(function (response) {
+                // console.log(response);
+                if(response.data.code == 1){
+                     vm.ImagesList = response.data.result.content;
+                     vm.total = response.data.result.page.total;
+                }
+               
+            })
+            .catch(function (error) {
+                // console.log(error);
+            });
+            
+        },
+        handleSizeChange(val) {
+          //console.log(`每页 ${val} 条`);
+           this.page();
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            // console.log(`当前页: ${val}`);
+            this.page();
+        },
+        deleteImage(_pathname){
+            axios.post('api/imager/remove', {
+                params: {
+                    pathname: _pathname
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
-        return isJPGPNG&&isLt2M;
-      }
+      
     }
   }
 </script>

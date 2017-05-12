@@ -27,17 +27,17 @@
                     <el-form-item label="早安美图">
                         <el-input v-model="daySign.morning.bg" readonly></el-input>
                         
-                         <!--<el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
-                            <input type="file" value="" style="visibility:hidden；width:1px;height:1px;" onchange="getImgInfo"></input>
-                         </el-button>-->
+                         <el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
+                         </el-button>
+                        <input type="file" value="" style="display:none;" @change="getImgInfo"></input>
+                         
                         <!-- :http-request="submitUpload" -->
                         <el-upload class="upload-demo"
                                    ref="upload"
                                    action="http://localhost/api/imager/upload/"
                                    :multiple="false"
-                                   :on-change ="onchange"                                 
+                                   :on-change="handleChange"                                 
                                    :on-preview="handlePreview"
-                                   :on-remove="handleRemove"
                                    :before-upload="beforeUpload"
                                    :auto-upload="false">
                             <el-button size="mini" slot="trigger"
@@ -214,7 +214,8 @@ export default {
                     prewImage:""
                 }
             },
-            file:{}
+            file:{},
+            images:[]
         }
 
     },
@@ -293,17 +294,13 @@ export default {
             });
             //非自动保存 不然如何预览
         },
-        onchange(file,fileList){
+        handleChange(file, fileList){
             this.file = file.url;
-            // console.log("onchange",file);
+            console.log("handleChange",file);
         },
         handlePreview(file) {
             this.file = file.url;
             // console.log("handlePreview",file);
-        },
-        handleRemove(file) {
-            this.file = file.url;
-            console.log("handleRemove",file);
         },
         beforeUpload(file) {
            this.file = file.url;
@@ -322,9 +319,32 @@ export default {
             this.msg1 = "友情提示：缺少背景图"; //必须
             this.msg2 = "友情提示：缺少每日名言"
         },
-        selectUpload(){
-            
+        selectUpload(e){
+            $('input[type=file]').trigger('click');
         },
+        getImgInfo(e){
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length)return; 
+            console.log(files)
+            this.createImage(file);
+            this.file = this.images;
+        },
+        createImage(file) {
+                if(typeof FileReader==='undefined'){
+                    alert('您的浏览器不支持图片上传，请升级您的浏览器');
+                    return false;
+                }
+                var image = new Image();         
+                var vm = this;
+                var leng=file.length;
+                for(var i=0;i<leng;i++){
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file[i]); 
+                    reader.onload =function(e){
+                        vm.images.push(e.target.result);                                    
+                    };                 
+                }                        
+            },
         //上传图片自动只截取640*500 多图叠加
         submitUpload(){
             // this.$refs.upload.handleChange();

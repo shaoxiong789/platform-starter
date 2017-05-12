@@ -48,7 +48,7 @@ const menus = [
         path:"manage/daysign/photoGallery",
         icon:'el-icon-picture',
         component:dsPhotoGallery,
-        visible:false
+        visible:true
       },{
         name:'有效时间设置',
         path:"manage/daysign/datesetting",
