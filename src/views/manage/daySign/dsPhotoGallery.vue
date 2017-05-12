@@ -51,9 +51,9 @@ import axios from 'axios';
     },
     methods: {
         init:function(){
-            this.page();
+            this.loadData();
         },
-        page(){
+        loadData(){
             var vm = this;
             //查询上传的背景图情况
             axios.get('api/imager/list', {
@@ -64,7 +64,7 @@ import axios from 'axios';
             })
             .then(function (response) {
                 // console.log(response);
-                if(response.data.code == 1){
+                if(response.status==200 && response.data.code == 1){
                      vm.ImagesList = response.data.result.content;
                      vm.total = response.data.result.page.total;
                 }
@@ -77,12 +77,12 @@ import axios from 'axios';
         },
         handleSizeChange(val) {
           //console.log(`每页 ${val} 条`);
-           this.page();
+           this.loadData();
         },
         handleCurrentChange(val) {
             this.currentPage = val;
             // console.log(`当前页: ${val}`);
-            this.page();
+            this.loadData();
         },
         deleteImage(_pathname){
             axios.post('api/imager/remove', {

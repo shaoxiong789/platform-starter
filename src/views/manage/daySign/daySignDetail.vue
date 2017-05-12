@@ -386,6 +386,7 @@ export default {
             const ctx = canvas.getContext('2d');
             this._drawImage(ctx, url, 0, 0, 640, 500, function () {                
                 const base64 = canvas.toDataURL();
+                // console.log(base64)
                 cb(base64);
             });
 
@@ -396,6 +397,8 @@ export default {
             img.src = url; //"./bgnight.png"; // url  实际用URL
             // let img = document.getElementById(id);
             img.onload = function () {
+                // 先清空画板 
+                ctx.clearRect(0,0,w,h);
                 //ctx.drawImage(img, x, y, w, h); //drawImage(image, x, y, width, height)//缩放
                 ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
                 if (callback != null) {
@@ -404,7 +407,17 @@ export default {
             }
         },
         save(flag) {
-
+            axios.post('api/clock/calendar/save', {
+                params: {
+                    pathname: _pathname
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 }
