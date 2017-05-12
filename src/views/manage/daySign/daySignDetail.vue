@@ -27,9 +27,9 @@
                     <el-form-item label="早安美图">
                         <el-input v-model="daySign.morning.bg" readonly></el-input>
                         
-                         <el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
+                         <!--<el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
                          </el-button>
-                        <input type="file" value="" style="display:none;" @change="getImgInfo"></input>
+                        <input type="file" value="" style="display:none;" @change="getImgInfo"></input>-->
                          
                         <!-- :http-request="submitUpload" -->
                         <el-upload class="upload-demo"
@@ -84,9 +84,6 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <el-button type="success"
-                                   size="small"
-                                   @click="save('morning')">保存</el-button>
                         <span class="tip">{{msg1}}</span>
                     </el-form-item>
                 </el-form>
@@ -157,9 +154,6 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <el-button type="success"
-                                   size="small"
-                                   @click="save('night')">保存</el-button>
                         <span class="tip">{{msg2}}</span>
                     </el-form-item>
 
@@ -171,8 +165,12 @@
                     <img :src="daySign.night.prewImage" class="image" >                       
                 </div>
             </div>
-            <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
         </div>
+        <br>
+        <el-button type="success"
+                @click="save()">保存</el-button>
+        <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
+        
 
     </div>
 </template>
@@ -222,6 +220,7 @@ export default {
     async created() {
         this.getDate();
         await this.getDaySign();
+       
     },
     watch: {
         // 'radio'(val, oldVal) {
@@ -320,7 +319,7 @@ export default {
             this.msg2 = "友情提示：缺少每日名言"
         },
         selectUpload(e){
-            $('input[type=file]').trigger('click');
+            // this.$el('input[type=file]').trigger('click');
         },
         getImgInfo(e){
             var files = e.target.files || e.dataTransfer.files;
@@ -331,7 +330,7 @@ export default {
         },
         createImage(file) {
                 if(typeof FileReader==='undefined'){
-                    alert('您的浏览器不支持图片上传，请升级您的浏览器');
+                     this.$message.error('您的浏览器不支持图片上传，请升级您的浏览器');
                     return false;
                 }
                 var image = new Image();         
@@ -371,9 +370,7 @@ export default {
                                 // pathname: "133bcfad87f563eadb4fed83.png"
                                 // updateTime:"2017-05-08T09:34:44.541Z"
                                 // _id:"133bcfad87f563eadb4fed83"
-                        }
-
-                        
+                        }                       
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -406,18 +403,49 @@ export default {
                 }
             }
         },
-        save(flag) {
-            axios.post('api/clock/calendar/save', {
-                params: {
-                    pathname: _pathname
-                }
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        save() {
+            console.log("save")
+            // if(this.validate()){
+                axios.post('api/clock/calendar/save', {
+                    params: {
+                        // "day":this.day,
+                        // "morning":this.daySign.morning,
+                        // "night":this.daySign.night
+                        "day":"2017-05-17",
+                        "morning":{
+                                "bg":"String",
+                                "word":{
+                                    "text":"晚安吧",
+                                    "fontSize":14,
+                                    "color":"#FFF",
+                                    "x":0,
+                                    "y":0
+                                }
+                        },
+                        "night":{
+                            "bg":"String",
+                            "word":{
+                                "text":"早安吧",
+                                "fontSize":14,
+                                "color":"#FFF",
+                                "x":0,
+                                "y":0
+                            }
+                        }
+                    }
+                })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            // }
+
+        },
+        validate(){
+
+            return true;
         }
     }
 }
