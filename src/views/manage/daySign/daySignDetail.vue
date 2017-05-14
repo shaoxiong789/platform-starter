@@ -26,23 +26,6 @@
                     </el-form-item>
                     <el-form-item label="早安美图">
                         <el-input v-model="daySign.morning.bg" readonly></el-input>
-                        
-                         <!--<el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
-                            <input type="file" value="" style="visibility:hidden；width:1px;height:1px;" onchange="getImgInfo"></input>
-                         </el-button>-->
-                        <!-- :http-request="submitUpload" -->
-                        <el-upload class="upload-demo"
-                                   action="http://localhost/api/imager/upload/"
-                                   :multiple="false"                                  
-                                   :on-preview="handlePreview"
-                                   :before-upload="beforeUpload"
-                                   :auto-upload="false">
-                            <el-button size="mini" slot="trigger"
-                                       type="primary">上传图片</el-button>
-                            <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传到服务器</el-button>                                       
-                            <div slot="tip"
-                                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                        </el-upload> 
                     </el-form-item>
                     <el-form-item label="早安一言">
                         <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
@@ -51,7 +34,7 @@
                         <el-row>
                             <el-col :span="11">
                                 font-size :
-                                <input type="text"
+                                <input type="number"
                                        class="comm-input"
                                        v-model="daySign.morning.word.fontSize"> px
                             </el-col>
@@ -81,16 +64,17 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <el-button type="success"
-                                   size="small"
-                                   @click="save('morning')">保存</el-button>
                         <span class="tip">{{msg1}}</span>
                     </el-form-item>
                 </el-form>
             </div>
             <div class="ds-preview">
+                <img-upload style="width:340px;height:400px" @change="uploadChangeMorning"
+                @clear="daySign.morning.bg=''"
+                v-model="morningImg"
+                ></img-upload>
                 <div class="ds-pw-img" v-if="daySign.morning.prewImage !=''">
-                    <img :src="daySign.morning.prewImage" class="image" >                       
+                    <img :src="daySign.morning.prewImage" class="image" >
                 </div>
             </div>
         </div>
@@ -103,19 +87,9 @@
                         <el-tag type="warning">{{daySign.night.name}}</el-tag>
                     </el-form-item>
                                    <!--"-->
-                    
+
                     <el-form-item label="晚安美图">
                         <el-input v-model="daySign.night.bg" readonly></el-input>
-                        <el-upload class="upload-demo"
-                                   action="http://localhost/api/imager/upload/"
-                                   :on-preview="handlePreview"
-                                   :before-upload="beforeUpload"
-                                   :auto-upload="false">
-                            <el-button size="mini"
-                                       type="primary">上传图片</el-button>
-                            <div slot="tip"
-                                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                        </el-upload>
                     </el-form-item>
                     <el-form-item label="晚安一言">
                         <el-input v-model="daySign.night.word.text"></el-input><span class="tip">（限制30个字符）</span>
@@ -124,7 +98,7 @@
                         <el-row>
                             <el-col :span="11">
                                 font-size :
-                                <input type="text"
+                                <input type="number"
                                        class="comm-input"
                                        v-model="daySign.night.word.fontSize"> px
                             </el-col>
@@ -154,9 +128,6 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <el-button type="success"
-                                   size="small"
-                                   @click="save('night')">保存</el-button>
                         <span class="tip">{{msg2}}</span>
                     </el-form-item>
 
@@ -164,8 +135,12 @@
 
             </div>
             <div class="ds-preview">
+                <img-upload style="width:340px;height:400px" @change="uploadChangeNight"
+                @clear="daySign.night.bg=''"
+                v-model="nightImg"
+                ></img-upload>
                 <div class="ds-pw-img" v-if="daySign.night.prewImage !=''">
-                    <img :src="daySign.night.prewImage" class="image" >                       
+                    <!-- <img :src="daySign.night.prewImage" class="image" > -->
                 </div>
             </div>
             <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
@@ -176,10 +151,12 @@
 <script>
 import moment from 'moment';
 import axios from 'axios';
+import ImgUpload from '../../../components/common/ImgUpload.vue';
+import QiNiuImage from '../../../utils/QiNiuImage.js'
 export default {
     data() {
         return {
-            imgBaseURl:" http://oo8xbcend.bkt.clouddn.com/",
+            imgBaseURl:"http://oo8xbcend.bkt.clouddn.com/",
             day: '',
             msg1: "",
             msg2: "",
@@ -213,7 +190,39 @@ export default {
             },
             file:{}
         }
-
+    },
+    computed:{
+      morningImg() {
+        if(this.daySign.morning.word.text){
+          return new QiNiuImage().createTextWater(this.daySign.morning.bg)
+          .text(this.daySign.morning.word.text)
+          .fontSize(this.daySign.morning.word.fontSize)
+          .fill(this.daySign.morning.word.color)
+          .dx(this.daySign.morning.word.x)
+          .dy(this.daySign.morning.word.y)
+          .gravity("NorthWest")
+          .toUrl();
+        }else{
+          return this.daySign.morning.bg;
+        }
+      },
+      nightImg() {
+        if(this.daySign.night.word.text){
+          return new QiNiuImage().createTextWater(this.daySign.night.bg)
+          .text(this.daySign.night.word.text)
+          .fontSize(this.daySign.night.word.fontSize)
+          .fill(this.daySign.night.word.color)
+          .dx(this.daySign.night.word.x)
+          .dy(this.daySign.night.word.y)
+          .gravity("NorthWest")
+          .toUrl();
+        }else{
+          return this.daySign.night.bg;
+        }
+      }
+    },
+    components: {
+      ImgUpload
     },
     async created() {
         this.getDate();
@@ -312,46 +321,37 @@ export default {
             this.msg2 = "友情提示：缺少每日名言"
         },
         selectUpload(){
-            
+
         },
         //上传图片自动只截取640*500
         submitUpload(){
             const that = this;
             console.log("this.file",this.file);
-            const testImg = this.file; 
+            const testImg = this.file;
             this.imgConvertbase64(testImg,function(base64){
                 //this.$refs.upload.submit();
                 var param = new FormData();
                 param.append('img',base64);
-                // var config = {
-                //     headers:{"Content-Type": "multipart/form-data"}
-                // }
-                axios.post('api/imager/upload/',param)
+
+                axios.post('/api/imager/upload/',param)
                     .then(function (response) {
                         if(response.data.code == 1){
                             console.log(response.data.result);
                             that.daySign.morning.bg = that.imgBaseURl + response.data.result.pathname ;
                             console.log(that.daySign.morning.bg)
                             that.daySign.morning.prewImage = that.daySign.morning.bg;
-                            // that.$refs.upload.clearFiles();
-                            // that.$refs.upload.abort();
-                                // pathname: "133bcfad87f563eadb4fed83.png"
-                                // updateTime:"2017-05-08T09:34:44.541Z"
-                                // _id:"133bcfad87f563eadb4fed83"
                         }
-
-                        
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             });
-           
+
         },
         imgConvertbase64(url,cb){
             var canvas = document.getElementById('convertbase64');
             const ctx = canvas.getContext('2d');
-            this._drawImage(ctx, url, 0, 0, 640, 500, function () {                
+            this._drawImage(ctx, url, 0, 0, 640, 500, function () {
                 const base64 = canvas.toDataURL();
                 cb(base64);
             });
@@ -364,7 +364,7 @@ export default {
             // let img = document.getElementById(id);
             img.onload = function () {
                 //ctx.drawImage(img, x, y, w, h); //drawImage(image, x, y, width, height)//缩放
-                ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+                ctx.drawImage(img, x, y,  w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
                 if (callback != null) {
                     callback();
                 }
@@ -372,7 +372,34 @@ export default {
         },
         save(flag) {
 
+        },
+        uploadChangeMorning(imgData,change){
+          var param = new FormData();
+          param.append('img',imgData);
+          axios.post('/api/imager/upload/',param)
+          .then( (response)=> {
+            if(response.data.code == 1){
+              this.daySign.morning.bg = this.imgBaseURl + response.data.result.pathname
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+        },
+        uploadChangeNight(imgData,change){
+          var param = new FormData();
+          param.append('img',imgData);
+          axios.post('/api/imager/upload/',param)
+          .then( (response)=> {
+            if(response.data.code == 1){
+              this.daySign.night.bg = this.imgBaseURl + response.data.result.pathname
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
         }
+    },
+    created() {
+
     }
 }
 </script>
