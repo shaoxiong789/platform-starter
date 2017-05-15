@@ -143,8 +143,12 @@
                     <!-- <img :src="daySign.night.prewImage" class="image" > -->
                 </div>
             </div>
-            <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
         </div>
+        <br>
+        <el-button type="success"
+                @click="save()">保存</el-button>
+        <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
+
 
     </div>
 </template>
@@ -169,7 +173,7 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "",//默认 #fff
+                        color: "#fff",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
@@ -181,14 +185,15 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "",//默认 #fff
+                        color: "#fff",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
                     prewImage:""
                 }
             },
-            file:{}
+            file:{},
+            images:[]
         }
     },
     computed:{
@@ -227,6 +232,7 @@ export default {
     async created() {
         this.getDate();
         await this.getDaySign();
+
     },
     watch: {
         // 'radio'(val, oldVal) {
@@ -299,78 +305,52 @@ export default {
             });
             //非自动保存 不然如何预览
         },
-        handlePreview(file) {
-            this.file = file.url;
-            console.log("handlePreview",file);
-        },
-        beforeUpload(file) {
-           this.file = file.url;
-           console.log("beforeUpload",file);
-            // 检测图片大小 还有 和格式
-            const isJPGPNG = file.type === 'image/jpeg' || file.type === 'image/png';
-            const isLt2M = file.size / 1024 / 1024 < 0.5;
-
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 500k!');
-            }
-            return isJPGPNG && isLt2M;
-        },
         preview(flag) {
             //点击预览 报错 出现友情提示 msg1 msg1
             this.msg1 = "友情提示：缺少背景图"; //必须
             this.msg2 = "友情提示：缺少每日名言"
         },
-        selectUpload(){
-
-        },
-        //上传图片自动只截取640*500
-        submitUpload(){
-            const that = this;
-            console.log("this.file",this.file);
-            const testImg = this.file;
-            this.imgConvertbase64(testImg,function(base64){
-                //this.$refs.upload.submit();
-                var param = new FormData();
-                param.append('img',base64);
-
-                axios.post('/api/imager/upload/',param)
-                    .then(function (response) {
-                        if(response.data.code == 1){
-                            console.log(response.data.result);
-                            that.daySign.morning.bg = that.imgBaseURl + response.data.result.pathname ;
-                            console.log(that.daySign.morning.bg)
-                            that.daySign.morning.prewImage = that.daySign.morning.bg;
+        save() {
+            console.log("save")
+            // if(this.validate()){
+                axios.post('api/clock/calendar/save', {
+                    params: {
+                        // "day":this.day,
+                        // "morning":this.daySign.morning,
+                        // "night":this.daySign.night
+                        "day":"2017-05-17",
+                        "morning":{
+                                "bg":"String",
+                                "word":{
+                                    "text":"晚安吧",
+                                    "fontSize":14,
+                                    "color":"#FFF",
+                                    "x":0,
+                                    "y":0
+                                }
+                        },
+                        "night":{
+                            "bg":"String",
+                            "word":{
+                                "text":"早安吧",
+                                "fontSize":14,
+                                "color":"#FFF",
+                                "x":0,
+                                "y":0
+                            }
                         }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            });
+                    }
+                })
+                .then( (response) => {
+                    console.log(response);
+                })
+                .catch( (error) => {
+                    console.log(error);
+                });
+            // }
 
         },
-        imgConvertbase64(url,cb){
-            var canvas = document.getElementById('convertbase64');
-            const ctx = canvas.getContext('2d');
-            this._drawImage(ctx, url, 0, 0, 640, 500, function () {
-                const base64 = canvas.toDataURL();
-                cb(base64);
-            });
-
-        },
-        _drawImage(ctx, url, x, y, w, h, callback) {
-            //  draw bgImg
-            let img = new Image();
-            img.src = url; //"./bgnight.png"; // url  实际用URL
-            // let img = document.getElementById(id);
-            img.onload = function () {
-                //ctx.drawImage(img, x, y, w, h); //drawImage(image, x, y, width, height)//缩放
-                ctx.drawImage(img, x, y,  w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-                if (callback != null) {
-                    callback();
-                }
-            }
-        },
-        save(flag) {
+        validate(){
 
         },
         uploadChangeMorning(imgData,change){
