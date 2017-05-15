@@ -73,9 +73,6 @@
                 @clear="daySign.morning.bg=''"
                 v-model="morningImg"
                 ></img-upload>
-                <div class="ds-pw-img" v-if="daySign.morning.prewImage !=''">
-                    <img :src="daySign.morning.prewImage" class="image" >
-                </div>
             </div>
         </div>
 
@@ -139,9 +136,6 @@
                 @clear="daySign.night.bg=''"
                 v-model="nightImg"
                 ></img-upload>
-                <div class="ds-pw-img" v-if="daySign.night.prewImage !=''">
-                    <!-- <img :src="daySign.night.prewImage" class="image" > -->
-                </div>
             </div>
         </div>
         <br>
@@ -173,11 +167,10 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "#FFFFFF",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    },
-                    prewImage:""
+                    }
                 },
                 night: {
                     name: "晚安打卡",
@@ -185,11 +178,10 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "#FFFFFF",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    },
-                    prewImage:""
+                    }
                 }
             },
             file:{},
@@ -267,7 +259,7 @@ export default {
                 this.daySign.night.bg = daySign.night.bg;
                 if(daySign.night.word){
                   //this.daySign.night.word = daySign.morning.word ;
-                  this.daySign.night.word.text = daySign.morning.word.text;
+                  this.daySign.night.word.text = daySign.night.word.text;
                   this.daySign.night.word.fontSize = daySign.night.word.fontSize;
                   this.daySign.night.word.color = daySign.night.word.color;
                   this.daySign.night.word.x = daySign.night.word.x;
@@ -280,7 +272,7 @@ export default {
           }
         },
         getDate() {
-            // this.daySign.day = JSON.stringify(this.$route.query.day);
+            this.daySign.day = this.$route.query.day;
             // this.day = this.daySign.day ;
             this.day = "选择日期为： "+moment(this.$route.query.day).format("YYYY-MM-DD");
         },
@@ -311,44 +303,19 @@ export default {
             this.msg2 = "友情提示：缺少每日名言"
         },
         save() {
-            console.log("save")
-            // if(this.validate()){
-                axios.post('api/clock/calendar/save', {
-                    params: {
-                        // "day":this.day,
-                        // "morning":this.daySign.morning,
-                        // "night":this.daySign.night
-                        "day":"2017-05-17",
-                        "morning":{
-                                "bg":"String",
-                                "word":{
-                                    "text":"晚安吧",
-                                    "fontSize":14,
-                                    "color":"#FFF",
-                                    "x":0,
-                                    "y":0
-                                }
-                        },
-                        "night":{
-                            "bg":"String",
-                            "word":{
-                                "text":"早安吧",
-                                "fontSize":14,
-                                "color":"#FFF",
-                                "x":0,
-                                "y":0
-                            }
-                        }
-                    }
-                })
-                .then( (response) => {
-                    console.log(response);
-                })
-                .catch( (error) => {
-                    console.log(error);
+            axios.post('/api/clock/calendar/save', this.daySign)
+            .then( (response) => {
+              if(response.data.code == 1){
+                this.$notify({
+                  title: '',
+                  message: '日签图片设置成功',
+                  type: 'success'
                 });
-            // }
-
+              }
+            })
+            .catch( (error) => {
+                console.log(error);
+            });
         },
         validate(){
 
@@ -377,9 +344,6 @@ export default {
             console.log(error);
           });
         }
-    },
-    created() {
-
     }
 }
 </script>
