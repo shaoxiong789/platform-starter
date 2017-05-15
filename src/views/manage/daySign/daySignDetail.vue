@@ -73,9 +73,6 @@
                 @clear="daySign.morning.bg=''"
                 v-model="morningImg"
                 ></img-upload>
-                <div class="ds-pw-img" v-if="daySign.morning.prewImage !=''">
-                    <img :src="daySign.morning.prewImage" class="image" >
-                </div>
             </div>
         </div>
 
@@ -139,12 +136,13 @@
                 @clear="daySign.night.bg=''"
                 v-model="nightImg"
                 ></img-upload>
-                <div class="ds-pw-img" v-if="daySign.night.prewImage !=''">
-                    <!-- <img :src="daySign.night.prewImage" class="image" > -->
-                </div>
             </div>
             <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
         </div>
+
+        <br>
+        <el-button type="success"
+                @click="save()">保存</el-button>
 
     </div>
 </template>
@@ -169,11 +167,10 @@ export default {
                     word: {
                         text: "",
                         fontSize: 12,
-                        color: "#fff",//默认 #fff
+                        color: "#FFFFFF",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    },
-                    prewImage:""
+                    }
                 },
                 night: {
                     name: "晚安打卡",
@@ -181,11 +178,10 @@ export default {
                     word: {
                         text: "",
                         fontSize: 12,
-                        color: "#fff",//默认 #fff
+                        color: "#FFFFFF",//默认 #fff
                         x: 0,//默认  0
                         y: 0
-                    },
-                    prewImage:""
+                    }
                 }
             },
             file:{}
@@ -228,6 +224,12 @@ export default {
         this.getDate();
         await this.getDaySign();
     },
+    watch: {
+        // 'radio'(val, oldVal) {
+        //     console.log(val, oldVal)
+        //     this.openWarning();
+        // }
+    },
     methods: {
         async getDaySign(){
           var response = await axios.get('/api/clock/calendar/detail', {
@@ -255,7 +257,7 @@ export default {
                 this.daySign.night.bg = daySign.night.bg;
                 if(daySign.night.word){
                   //this.daySign.night.word = daySign.morning.word ;
-                  this.daySign.night.word.text = daySign.morning.word.text;
+                  this.daySign.night.word.text = daySign.night.word.text;
                   this.daySign.night.word.fontSize = daySign.night.word.fontSize;
                   this.daySign.night.word.color = daySign.night.word.color;
                   this.daySign.night.word.x = daySign.night.word.x;
@@ -267,82 +269,27 @@ export default {
           }
         },
         getDate() {
-            // this.daySign.day = JSON.stringify(this.$route.query.day);
+            this.daySign.day = this.$route.query.day;
             // this.day = this.daySign.day ;
             this.day = "选择日期为： "+moment(this.$route.query.day).format("YYYY-MM-DD");
         },
         goBack() {
             this.$router.go(-1);
         },
-        openWarning() {
-            this.$confirm('切换早晚将清除未保存设置, 是否保存?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '保存成功!'
+        save() {
+            axios.post('/api/clock/calendar/save', this.daySign)
+            .then( (response) => {
+              if(response.data.code == 1){
+                this.$notify({
+                  title: '',
+                  message: '日签图片设置成功',
+                  type: 'success'
                 });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消保存 '
-                });
+              }
+            })
+            .catch( (error) => {
+                console.log(error);
             });
-            //非自动保存 不然如何预览
-        },
-        preview(flag) {
-
-            this.msg1 = "友情提示：缺少背景图"; 
-            this.msg2 = "友情提示：缺少每日名言"
-        },
-        //上传图片自动只截取640*500
-        submitUpload(){
-            const that = this;
-            console.log("this.file",this.file);
-            const testImg = this.file;
-            this.imgConvertbase64(testImg,function(base64){
-                //this.$refs.upload.submit();
-                var param = new FormData();
-                param.append('img',base64);
-                axios.post('/api/imager/upload/',param)
-                    .then(function (response) {
-                        if(response.data.code == 1){
-                            console.log(response.data.result);
-                            that.daySign.morning.bg = that.imgBaseURl + response.data.result.pathname ;
-                            console.log(that.daySign.morning.bg)
-                            that.daySign.morning.prewImage = that.daySign.morning.bg;
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            });
-        },
-        imgConvertbase64(url,cb){
-            var canvas = document.getElementById('convertbase64');
-            const ctx = canvas.getContext('2d');
-            this._drawImage(ctx, url, 0, 0, 640, 500, function () {
-                const base64 = canvas.toDataURL();
-                cb(base64);
-            });
-        },
-        _drawImage(ctx, url, x, y, w, h, callback) {
-            //  draw bgImg
-            let img = new Image();
-            img.src = url; //"./bgnight.png"; // url  实际用URL
-            // let img = document.getElementById(id);
-            img.onload = function () {
-                //ctx.drawImage(img, x, y, w, h); //drawImage(image, x, y, width, height)//缩放
-                ctx.drawImage(img, x, y,  w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-                if (callback != null) {
-                    callback();
-                }
-            }
-        },
-        save(flag) {
-
         },
         uploadChangeMorning(imgData,change){
           var param = new FormData();
@@ -368,9 +315,9 @@ export default {
             console.log(error);
           });
         }
+
     },
     created() {
-        
     }
 }
 </script>

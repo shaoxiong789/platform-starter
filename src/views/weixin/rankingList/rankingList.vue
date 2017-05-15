@@ -84,7 +84,7 @@ export default {
     width:31px;
     height:31px;
     border:1px solid #eee;
-    border-radio:50%;
+    border-radius:50%;
 }
 .r-list .user-name{
 

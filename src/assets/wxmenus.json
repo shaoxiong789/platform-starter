@@ -1,0 +1,90 @@
+{ 
+   "is_menu_open": 1, 
+   "selfmenu_info": { 
+       "button": [ 
+           { 
+               "name": "快看", 
+               "sub_button": { 
+                   "list": [ 
+                       { 
+                           "type": "view", 
+                           "name": "冥想解百忧", 
+                           "url": "http://mp.weixin.qq.com/mp/homepage?__biz=MzA3OTExMTY1OQ==&hid=4&sn=60888c120e5daaf56246089182bc51d0#wechat_redirect"
+                       }, 
+                       { 
+                           "type": "view", 
+                           "name": "运动变美丽", 
+                           "url": "http://mp.weixin.qq.com/mp/homepage?__biz=MzA3OTExMTY1OQ==&hid=3&sn=b23dc37a1674fb46e84551de5b97c7c9#wechat_redirect"
+                       }, 
+                       { 
+                           "type": "view", 
+                           "name": "读写有意思", 
+                           "url": "http://mp.weixin.qq.com/mp/homepage?__biz=MzA3OTExMTY1OQ==&hid=5&sn=ddc423456e9f79ade817be89cccb0822#wechat_redirect"
+                       }, 
+                       { 
+                           "type": "view", 
+                           "name": "泽阳有话聊", 
+                           "url": "http://mp.weixin.qq.com/mp/homepage?__biz=MzA3OTExMTY1OQ==&hid=6&sn=30844c547fd0f8564fa6f330a5bfeccf#wechat_redirect"
+                       }, 
+                       { 
+                           "type": "news", 
+                           "name": "自助取干货", 
+                           "value":"", //mediaID 没找到
+                           "news_info": { 
+                               "list": [ 
+                                   { 
+                                       "title": "如何快速找到你想看的内容", 
+                                       "author": "自控力school", 
+                                       "digest": "只需轻轻一点，所有的好文都是你的啦！", 
+                                       "show_cover": 1, 
+                                       "cover_url": "https://mmbiz.qlogo.cn/mmbiz_png/g85kbfEZlSagX2Lg3NaLJdgHOjIcu8DMap1nCZu39CXA8qcWuuRicXkaHyyNE1VhVp0mnuHeiaaiaWnBgFDtib8ttw/0?wx_fmt=png", 
+                                       "content_url": "http://mp.weixin.qq.com/s/ev8b9r9phnqWimmhRvXAtA", 
+                                       "source_url": ""
+                                   }
+                               ]
+                           }
+                       }
+                       
+                   ]
+               }
+           },
+           { 
+               "name": "关于我们", 
+               "sub_button": { 
+                   "list": [ 
+                       { 
+                           "type": "News", 
+                           "name": "转载需知", 
+                           "value":"", //mediaID 没找到
+                           "news_info": { 
+                               "list": [ 
+                                   { 
+                                       "title": "转载须知", 
+                                       "author": "运营团队", 
+                                       "digest": "如果你对我们的文章感兴趣并有意转载，请先阅读本文", 
+                                       "show_cover": 0, 
+                                       "cover_url": "", 
+                                       "content_url": "http://mp.weixin.qq.com/s/GU6dGNVPnP-gDpKV8iTk7A", 
+                                       "source_url": ""
+                                   }
+                               ]
+                           }
+                       },{ 
+                           "type": "view", 
+                           "name": "往期训练营", 
+                           "url":"http://mp.weixin.qq.com/mp/homepage?__biz=MzA3OTExMTY1OQ==&hid=8&sn=c33f69a20c90ca4f94e684ec6f3bffd9#wechat_redirect"
+                     },{ 
+                           "type": "text", 
+                           "name": "点一下", 
+                           "value":"这是一个测试"
+                     }]
+               }
+            },
+           { 
+               "type": "Img", 
+               "name": "招募中", 
+               "value": "" //mediaID
+           }
+       ]
+   }
+}
