@@ -276,6 +276,9 @@ export default {
         goBack() {
             this.$router.go(-1);
         },
+        preview(){
+
+        },
         save() {
             axios.post('/api/clock/calendar/save', this.daySign)
             .then( (response) => {
@@ -316,8 +319,6 @@ export default {
           });
         }
 
-    },
-    created() {
     }
 }
 </script>
