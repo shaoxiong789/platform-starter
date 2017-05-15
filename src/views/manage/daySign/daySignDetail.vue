@@ -22,20 +22,22 @@
                 <el-form label-width="80px"
                          :model="daySign">
                     <el-form-item>
-                        <el-tag type="success">{{daySign.morning.name}}</el-tag>
+                        <el-tag type="success">早起打卡</el-tag>
                     </el-form-item>
-                    <el-form-item label="早安美图">
-                        <el-input v-model="daySign.morning.bg" readonly></el-input>
+                    <el-form-item label="早安美图*">
+                        <el-input v-model="daySign.morning.bg" readonly  ></el-input>
                     </el-form-item>
-                    <el-form-item label="早安一言">
+                    <el-form-item label="早安一言*">
                         <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
                     </el-form-item>
-                    <el-form-item label="一言布局">
+                    <el-form-item label="一言布局*">
                         <el-row>
                             <el-col :span="11">
                                 font-size :
                                 <input type="number"
                                        class="comm-input"
+                                       min = "12"
+                                       max = "60"
                                        v-model="daySign.morning.word.fontSize"> px
                             </el-col>
                             <el-col :span="11">
@@ -48,12 +50,14 @@
                                 position.X :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.morning.word.x"> px
                             </el-col>
                             <el-col :span="11">
                                 position.Y :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.morning.word.y"> px
                             </el-col>
                         </el-row>
@@ -64,7 +68,6 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <span class="tip">{{msg1}}</span>
                     </el-form-item>
                 </el-form>
             </div>
@@ -81,22 +84,23 @@
                 <el-form label-width="80px"
                          :model="daySign">
                     <el-form-item>
-                        <el-tag type="warning">{{daySign.night.name}}</el-tag>
+                        <el-tag type="warning">晚安打卡</el-tag>
                     </el-form-item>
-                                   <!--"-->
 
-                    <el-form-item label="晚安美图">
+                    <el-form-item label="晚安美图*">
                         <el-input v-model="daySign.night.bg" readonly></el-input>
                     </el-form-item>
-                    <el-form-item label="晚安一言">
+                    <el-form-item label="晚安一言*">
                         <el-input v-model="daySign.night.word.text"></el-input><span class="tip">（限制30个字符）</span>
                     </el-form-item>
-                    <el-form-item label="一言布局">
+                    <el-form-item label="一言布局*">
                         <el-row>
                             <el-col :span="11">
                                 font-size :
                                 <input type="number"
                                        class="comm-input"
+                                       min = "0"
+                                       max = "60"
                                        v-model="daySign.night.word.fontSize"> px
                             </el-col>
                             <el-col :span="11">
@@ -109,12 +113,14 @@
                                 position.X :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.night.word.x"> px
                             </el-col>
                             <el-col :span="11">
                                 position.Y :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.night.word.y"> px
                             </el-col>
                         </el-row>
@@ -125,7 +131,6 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <span class="tip">{{msg2}}</span>
                     </el-form-item>
 
                 </el-form>
@@ -156,13 +161,10 @@ export default {
         return {
             imgBaseURl:"http://oo8xbcend.bkt.clouddn.com/",
             day: '',
-            msg1: "",
-            msg2: "",
             daySign: {
                 id: "",
                 day: "",
                 morning: {
-                    name: "早起打卡",
                     bg: "",
                     word: {
                         text: "",
@@ -173,7 +175,6 @@ export default {
                     }
                 },
                 night: {
-                    name: "晚安打卡",
                     bg: "",
                     word: {
                         text: "",
@@ -237,10 +238,9 @@ export default {
               day: moment(this.$route.query.day).format("YYYY-MM-DD")
             }
           });
-          if(response.status==200){
+          if(response.status==200 && response.data.code==1){
             // console.log("response",response)
-            if(response.data.code==1){
-              var daySign = response.data.result;
+             var daySign = response.data.result;
               this.daySign.id = daySign._id;
               this.daySign.day = daySign.day;
               if(daySign.morning){
@@ -254,18 +254,18 @@ export default {
                 }
               }
               if(daySign.night){
-                this.daySign.night.bg = daySign.night.bg;
-                if(daySign.night.word){
-                  //this.daySign.night.word = daySign.morning.word ;
-                  this.daySign.night.word.text = daySign.night.word.text;
-                  this.daySign.night.word.fontSize = daySign.night.word.fontSize;
-                  this.daySign.night.word.color = daySign.night.word.color;
-                  this.daySign.night.word.x = daySign.night.word.x;
-                  this.daySign.night.word.y = daySign.night.word.y;
-                }
+                   this.daySign.night = daySign.night;
+                   this.daySign.night.bg = daySign.night.bg;
+                   if(daySign.night.word){
+                        this.daySign.night.word = daySign.morning.word ;
+                        this.daySign.night.word.text = daySign.night.word.text;
+                        this.daySign.night.word.fontSize = daySign.night.word.fontSize;
+                        this.daySign.night.word.color = daySign.night.word.color;
+                        this.daySign.night.word.x = daySign.night.word.x;
+                        this.daySign.night.word.y = daySign.night.word.y;
+                    }
               }
               // this.daySign = response.data.result
-            }
           }
         },
         getDate() {
@@ -276,47 +276,60 @@ export default {
         goBack() {
             this.$router.go(-1);
         },
+        verify(){
+            if(this.daySign.morning.bg == "" || this.daySign.morning.word.text == ""|| this.daySign.night.bg == "" || this.daySign.night.word.text == ""){
+                this.$message({
+                    type: 'warning',
+                    message: '填写信息不完整 '
+                });
+                return false;
+            }
+            return true;
+        },
         preview(){
 
         },
         save() {
-            axios.post('/api/clock/calendar/save', this.daySign)
-            .then( (response) => {
-              if(response.data.code == 1){
-                this.$notify({
-                  title: '',
-                  message: '日签图片设置成功',
-                  type: 'success'
-                });
-              }
-            })
-            .catch( (error) => {
-                console.log(error);
-            });
+            if(this.verify()){
+                axios.post('/api/clock/calendar/save', this.daySign)
+                    .then( (response) => {
+                    if(response.data.code == 1){
+                        this.$notify({
+                            title: '',
+                            message: '日签图片设置成功',
+                            type: 'success'
+                        });
+                    }
+                    })
+                    .catch( (error) => {
+                        console.log(error);
+                    });
+            }
+            
         },
         uploadChangeMorning(imgData,change){
           var param = new FormData();
           param.append('img',imgData);
           axios.post('/api/imager/upload/',param)
-          .then( (response)=> {
-            if(response.data.code == 1){
-              this.daySign.morning.bg = this.imgBaseURl + response.data.result.pathname
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
+                .then( (response)=> {
+                    if(response.data.code == 1){
+                    this.daySign.morning.bg = this.imgBaseURl + response.data.result.pathname
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
         },
         uploadChangeNight(imgData,change){
           var param = new FormData();
           param.append('img',imgData);
           axios.post('/api/imager/upload/',param)
-          .then( (response)=> {
-            if(response.data.code == 1){
-              this.daySign.night.bg = this.imgBaseURl + response.data.result.pathname
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
+                .then( (response)=> {
+                    if(response.data.code == 1){
+                    this.daySign.night.bg = this.imgBaseURl + response.data.result.pathname
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
         }
 
     }
@@ -336,7 +349,7 @@ export default {
     clear: both;
 }
 .comm-input {
-    width: 30px;
+    width: 40px;
     border-radius: 4px;
     border: 1px solid #bfcbd9;
     box-sizing: border-box;
@@ -368,5 +381,8 @@ export default {
     width: 320px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
+}
+.colored{
+    border:1px solid red;
 }
 </style>
