@@ -228,12 +228,6 @@ export default {
         this.getDate();
         await this.getDaySign();
     },
-    watch: {
-        // 'radio'(val, oldVal) {
-        //     console.log(val, oldVal)
-        //     this.openWarning();
-        // }
-    },
     methods: {
         async getDaySign(){
           var response = await axios.get('/api/clock/calendar/detail', {
@@ -298,27 +292,10 @@ export default {
             });
             //非自动保存 不然如何预览
         },
-        handlePreview(file) {
-            this.file = file.url;
-            console.log("handlePreview",file);
-        },
-        beforeUpload(file) {
-           this.file = file.url;
-           console.log("beforeUpload",file);
-            // 检测图片大小 还有 和格式
-            const isJPGPNG = file.type === 'image/jpeg' || file.type === 'image/png';
-            const isLt2M = file.size / 1024 / 1024 < 0.5;
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 500k!');
-            }
-            return isJPGPNG && isLt2M;
-        },
         preview(flag) {
-            //点击预览 报错 出现友情提示 msg1 msg1
-            this.msg1 = "友情提示：缺少背景图"; //必须
+
+            this.msg1 = "友情提示：缺少背景图"; 
             this.msg2 = "友情提示：缺少每日名言"
-        },
-        selectUpload(){
         },
         //上传图片自动只截取640*500
         submitUpload(){
@@ -393,6 +370,7 @@ export default {
         }
     },
     created() {
+        
     }
 }
 </script>

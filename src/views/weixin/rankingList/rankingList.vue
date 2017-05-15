@@ -7,8 +7,11 @@
         <div class="r-list">
             <ul>
                 <li v-for="(item,index) in resultList">
-                    <span class="index"></span>
-                    <!--<span class="logo-img"><img :src="item.logo"></span>-->
+                    <span class="index">{{index+1}}</span>
+                    <span class="logo-img">
+                        <!--<img :src="item.logo">-->
+                        <img src="../record/friend1.png">
+                    </span>
                     <span class="user-name">{{item.userName}}</span>
                     <span class="total-days">{{item.totalDays}}</span>
                     <span class="zan-nums">{{item.zanNums}}</span>
@@ -43,7 +46,7 @@ export default {
             totalDays:22,
             zanNums:23
         },{
-            logo:"",
+            logo:"../record/friend3.png",
             userName:"小可爱",
             totalDays:1,
             zanNums:23
@@ -76,6 +79,12 @@ export default {
 }
 .r-list .logo-img{
 
+}
+.r-list .logo-img img{
+    width:31px;
+    height:31px;
+    border:1px solid #eee;
+    border-radio:50%;
 }
 .r-list .user-name{
 

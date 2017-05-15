@@ -74,9 +74,6 @@ export default {
       this.startDay = start;
       this.endDay = end;
       this.loadDaySignList();
-      // this.mockData();
-      // console.log('changeMonth',start, end, current)
-      // console.log('changeMonth', start.format(), end.format(), current.format())
     },
     'eventClick'(event, jsEvent, pos) {
       //  console.log('eventClick', event, jsEvent, pos)
