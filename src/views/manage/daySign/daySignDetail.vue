@@ -26,26 +26,6 @@
                     </el-form-item>
                     <el-form-item label="早安美图">
                         <el-input v-model="daySign.morning.bg" readonly></el-input>
-                        
-                         <!--<el-button style="margin-left: 10px;" size="mini" type="success" @click="selectUpload">上传图片
-                         </el-button>
-                        <input type="file" value="" style="display:none;" @change="getImgInfo"></input>-->
-                         
-                        <!-- :http-request="submitUpload" -->
-                        <el-upload class="upload-demo"
-                                   ref="upload"
-                                   action="http://localhost/api/imager/upload/"
-                                   :multiple="false"
-                                   :on-change="handleChange"                                 
-                                   :on-preview="handlePreview"
-                                   :before-upload="beforeUpload"
-                                   :auto-upload="false">
-                            <el-button size="mini" slot="trigger"
-                                       type="primary">上传图片</el-button>
-                            <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传到服务器</el-button>                                       
-                            <div slot="tip"
-                                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                        </el-upload> 
                     </el-form-item>
                     <el-form-item label="早安一言">
                         <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
@@ -54,7 +34,7 @@
                         <el-row>
                             <el-col :span="11">
                                 font-size :
-                                <input type="text"
+                                <input type="number"
                                        class="comm-input"
                                        v-model="daySign.morning.word.fontSize"> px
                             </el-col>
@@ -89,8 +69,12 @@
                 </el-form>
             </div>
             <div class="ds-preview">
+                <img-upload style="width:340px;height:400px" @change="uploadChangeMorning"
+                @clear="daySign.morning.bg=''"
+                v-model="morningImg"
+                ></img-upload>
                 <div class="ds-pw-img" v-if="daySign.morning.prewImage !=''">
-                    <img :src="daySign.morning.prewImage" class="image" >                       
+                    <img :src="daySign.morning.prewImage" class="image" >
                 </div>
             </div>
         </div>
@@ -102,20 +86,10 @@
                     <el-form-item>
                         <el-tag type="warning">{{daySign.night.name}}</el-tag>
                     </el-form-item>
-                    
+                                   <!--"-->
+
                     <el-form-item label="晚安美图">
                         <el-input v-model="daySign.night.bg" readonly></el-input>
-                        <el-upload class="upload-demo"
-                                   action="http://localhost/api/imager/upload/"
-                                   :on-preview="handlePreview"
-                                   :before-upload="beforeUpload"
-                                   :auto-upload="false"
-                                   :show-file-list="false">
-                            <el-button size="mini"
-                                       type="primary">上传图片</el-button>
-                            <div slot="tip"
-                                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                        </el-upload>
                     </el-form-item>
                     <el-form-item label="晚安一言">
                         <el-input v-model="daySign.night.word.text"></el-input><span class="tip">（限制30个字符）</span>
@@ -124,7 +98,7 @@
                         <el-row>
                             <el-col :span="11">
                                 font-size :
-                                <input type="text"
+                                <input type="number"
                                        class="comm-input"
                                        v-model="daySign.night.word.fontSize"> px
                             </el-col>
@@ -161,26 +135,28 @@
 
             </div>
             <div class="ds-preview">
+                <img-upload style="width:340px;height:400px" @change="uploadChangeNight"
+                @clear="daySign.night.bg=''"
+                v-model="nightImg"
+                ></img-upload>
                 <div class="ds-pw-img" v-if="daySign.night.prewImage !=''">
-                    <img :src="daySign.night.prewImage" class="image" >                       
+                    <!-- <img :src="daySign.night.prewImage" class="image" > -->
                 </div>
             </div>
+            <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
         </div>
-        <br>
-        <el-button type="success"
-                @click="save()">保存</el-button>
-        <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
-        
 
     </div>
 </template>
 <script>
 import moment from 'moment';
 import axios from 'axios';
+import ImgUpload from '../../../components/common/ImgUpload.vue';
+import QiNiuImage from '../../../utils/QiNiuImage.js'
 export default {
     data() {
         return {
-            imgBaseURl:" http://oo8xbcend.bkt.clouddn.com/",
+            imgBaseURl:"http://oo8xbcend.bkt.clouddn.com/",
             day: '',
             msg1: "",
             msg2: "",
@@ -193,7 +169,7 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
@@ -205,22 +181,52 @@ export default {
                     word: {
                         text: "",
                         fontSize: 0,
-                        color: "#fff",//默认 #fff
+                        color: "",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
                     prewImage:""
                 }
             },
-            file:{},
-            images:[]
+            file:{}
         }
-
+    },
+    computed:{
+      morningImg() {
+        if(this.daySign.morning.word.text){
+          return new QiNiuImage().createTextWater(this.daySign.morning.bg)
+          .text(this.daySign.morning.word.text)
+          .fontSize(this.daySign.morning.word.fontSize)
+          .fill(this.daySign.morning.word.color)
+          .dx(this.daySign.morning.word.x)
+          .dy(this.daySign.morning.word.y)
+          .gravity("NorthWest")
+          .toUrl();
+        }else{
+          return this.daySign.morning.bg;
+        }
+      },
+      nightImg() {
+        if(this.daySign.night.word.text){
+          return new QiNiuImage().createTextWater(this.daySign.night.bg)
+          .text(this.daySign.night.word.text)
+          .fontSize(this.daySign.night.word.fontSize)
+          .fill(this.daySign.night.word.color)
+          .dx(this.daySign.night.word.x)
+          .dy(this.daySign.night.word.y)
+          .gravity("NorthWest")
+          .toUrl();
+        }else{
+          return this.daySign.night.bg;
+        }
+      }
+    },
+    components: {
+      ImgUpload
     },
     async created() {
         this.getDate();
         await this.getDaySign();
-       
     },
     watch: {
         // 'radio'(val, oldVal) {
@@ -262,7 +268,6 @@ export default {
                   this.daySign.night.word.y = daySign.night.word.y;
                 }
               }
-
               // this.daySign = response.data.result
             }
           }
@@ -293,21 +298,16 @@ export default {
             });
             //非自动保存 不然如何预览
         },
-        handleChange(file, fileList){
-            this.file = file.url;
-            console.log("handleChange",file);
-        },
         handlePreview(file) {
             this.file = file.url;
-            // console.log("handlePreview",file);
+            console.log("handlePreview",file);
         },
         beforeUpload(file) {
            this.file = file.url;
-        //    console.log("beforeUpload",file);
+           console.log("beforeUpload",file);
             // 检测图片大小 还有 和格式
             const isJPGPNG = file.type === 'image/jpeg' || file.type === 'image/png';
             const isLt2M = file.size / 1024 / 1024 < 0.5;
-
             if (!isLt2M) {
                 this.$message.error('上传头像图片大小不能超过 500k!');
             }
@@ -318,75 +318,38 @@ export default {
             this.msg1 = "友情提示：缺少背景图"; //必须
             this.msg2 = "友情提示：缺少每日名言"
         },
-        selectUpload(e){
-            // this.$el('input[type=file]').trigger('click');
+        selectUpload(){
         },
-        getImgInfo(e){
-            var files = e.target.files || e.dataTransfer.files;
-            if (!files.length)return; 
-            console.log(files)
-            this.createImage(file);
-            this.file = this.images;
-        },
-        createImage(file) {
-                if(typeof FileReader==='undefined'){
-                     this.$message.error('您的浏览器不支持图片上传，请升级您的浏览器');
-                    return false;
-                }
-                var image = new Image();         
-                var vm = this;
-                var leng=file.length;
-                for(var i=0;i<leng;i++){
-                    var reader = new FileReader();
-                    reader.readAsDataURL(file[i]); 
-                    reader.onload =function(e){
-                        vm.images.push(e.target.result);                                    
-                    };                 
-                }                        
-            },
-        //上传图片自动只截取640*500 多图叠加
+        //上传图片自动只截取640*500
         submitUpload(){
-            // this.$refs.upload.handleChange();
             const that = this;
             console.log("this.file",this.file);
-            const testImg = this.file; 
-            console.log("this.$refs.upload",this.$refs.upload);
+            const testImg = this.file;
             this.imgConvertbase64(testImg,function(base64){
                 //this.$refs.upload.submit();
                 var param = new FormData();
                 param.append('img',base64);
-                // var config = {
-                //     headers:{"Content-Type": "multipart/form-data"}
-                // }
-                axios.post('api/imager/upload/',param)
+                axios.post('/api/imager/upload/',param)
                     .then(function (response) {
                         if(response.data.code == 1){
                             console.log(response.data.result);
                             that.daySign.morning.bg = that.imgBaseURl + response.data.result.pathname ;
                             console.log(that.daySign.morning.bg)
                             that.daySign.morning.prewImage = that.daySign.morning.bg;
-                            that.$refs.upload.clearFiles();
-                            // that.$refs.upload.abort();
-                                // pathname: "133bcfad87f563eadb4fed83.png"
-                                // updateTime:"2017-05-08T09:34:44.541Z"
-                                // _id:"133bcfad87f563eadb4fed83"
-                        }                       
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             });
-           
         },
         imgConvertbase64(url,cb){
             var canvas = document.getElementById('convertbase64');
             const ctx = canvas.getContext('2d');
-            this._drawImage(ctx, url, 0, 0, 640, 500, function () {                
+            this._drawImage(ctx, url, 0, 0, 640, 500, function () {
                 const base64 = canvas.toDataURL();
-                // console.log(base64)
                 cb(base64);
             });
-
         },
         _drawImage(ctx, url, x, y, w, h, callback) {
             //  draw bgImg
@@ -394,59 +357,41 @@ export default {
             img.src = url; //"./bgnight.png"; // url  实际用URL
             // let img = document.getElementById(id);
             img.onload = function () {
-                // 先清空画板 
-                ctx.clearRect(0,0,w,h);
                 //ctx.drawImage(img, x, y, w, h); //drawImage(image, x, y, width, height)//缩放
-                ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+                ctx.drawImage(img, x, y,  w, h) //切片 ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
                 if (callback != null) {
                     callback();
                 }
             }
         },
-        save() {
-            console.log("save")
-            // if(this.validate()){
-                axios.post('api/clock/calendar/save', {
-                    params: {
-                        // "day":this.day,
-                        // "morning":this.daySign.morning,
-                        // "night":this.daySign.night
-                        "day":"2017-05-17",
-                        "morning":{
-                                "bg":"String",
-                                "word":{
-                                    "text":"晚安吧",
-                                    "fontSize":14,
-                                    "color":"#FFF",
-                                    "x":0,
-                                    "y":0
-                                }
-                        },
-                        "night":{
-                            "bg":"String",
-                            "word":{
-                                "text":"早安吧",
-                                "fontSize":14,
-                                "color":"#FFF",
-                                "x":0,
-                                "y":0
-                            }
-                        }
-                    }
-                })
-                .then( (response) => {
-                    console.log(response);
-                })
-                .catch( (error) => {
-                    console.log(error);
-                });
-            // }
-
+        save(flag) {
         },
-        validate(){
-
-            return true;
+        uploadChangeMorning(imgData,change){
+          var param = new FormData();
+          param.append('img',imgData);
+          axios.post('/api/imager/upload/',param)
+          .then( (response)=> {
+            if(response.data.code == 1){
+              this.daySign.morning.bg = this.imgBaseURl + response.data.result.pathname
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+        },
+        uploadChangeNight(imgData,change){
+          var param = new FormData();
+          param.append('img',imgData);
+          axios.post('/api/imager/upload/',param)
+          .then( (response)=> {
+            if(response.data.code == 1){
+              this.daySign.night.bg = this.imgBaseURl + response.data.result.pathname
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
         }
+    },
+    created() {
     }
 }
 </script>
@@ -454,38 +399,31 @@ export default {
 .ds-wrap {
     padding: 20px 0;
 }
-
 .el-form-item label {
     /*line-height:36px!important;*/
 }
-
 .ds-item {
     /*width:48%;
     display:inline-block;*/
     overflow: hidden;
     clear: both;
 }
-
 .comm-input {
     width: 30px;
     border-radius: 4px;
     border: 1px solid #bfcbd9;
     box-sizing: border-box;
 }
-
 .el-color-picker__trigger {
     border: none;
 }
-
 .ds-item .el-form-item {
     margin-bottom: 0px!important;
 }
-
 .ds-setting {
     width: 50%;
     float: left;
 }
-
 .day-info {
     font-size: 16px;
     display: inline-block;
@@ -494,13 +432,11 @@ export default {
     margin-left:10%;
     margin-bottom: 10px;
 }
-
 .ds-preview {
     width: 42%;
     float: right;
     padding-left: 8%;
 }
-
 .ds-pw-img {
     width: 320px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3);
