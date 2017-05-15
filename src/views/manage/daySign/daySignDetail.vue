@@ -168,8 +168,8 @@ export default {
                     bg: "",
                     word: {
                         text: "",
-                        fontSize: 0,
-                        color: "",//默认 #fff
+                        fontSize: 12,
+                        color: "#fff",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
@@ -180,8 +180,8 @@ export default {
                     bg: "",
                     word: {
                         text: "",
-                        fontSize: 0,
-                        color: "",//默认 #fff
+                        fontSize: 12,
+                        color: "#fff",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     },
@@ -365,6 +365,7 @@ export default {
             }
         },
         save(flag) {
+
         },
         uploadChangeMorning(imgData,change){
           var param = new FormData();
