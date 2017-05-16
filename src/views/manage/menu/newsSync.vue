@@ -1,6 +1,6 @@
 <template>
 <div>
-  <el-tabs type="border-card">
+  <el-tabs type="border-card" v-loading.body="loading">
         <el-tab-pane label="同步素材" >
         <input type="button"
                 class="el-button el-button--primary el-button--small"
@@ -8,8 +8,9 @@
                 value="同步"
                 @click="sync"  style=""/>
             总数为{{this.countList.news_count}}条数据
-            <el-progress type="circle" :percentage="percentage"></el-progress>
-            <div class="pagination" style="float:right;display:inline-block;">
+            {{pc}}%
+            <el-progress type="circle" :percentage="pc"></el-progress>
+            <div class="pagination" style="">
                 <el-pagination @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
                             :current-page="currentPage"
@@ -28,12 +29,13 @@ import axios from 'axios';
 export default {
   data (){
     return {
-        percentage:0,
+        pc:0,
         currentPage: 1,
-        pageSize:6,
+        pageSize:20,
         total:0,
         loading:true,
-        countList:0
+        countList:0,
+        loading:false
     }
   },
   mounted() {
@@ -57,6 +59,7 @@ export default {
             });
         },
         sync(){
+            this.loading = true;
             axios.get('api/weixin/sync/news', {
                 params: {
                     currentPage: this.currentPage,
@@ -67,7 +70,9 @@ export default {
                 console.log(response.data.result);
                 if(response.data.code == 1){
                     this.total = response.data.result.total;
-                    this.percentage = this.percentage + parseInt(this.pageSize/this.total)*100;
+                    console.log(this.pageSize,this.total)
+                    this.pc = this.pc + parseInt(this.pageSize/this.total)*100;
+                    this.loading = false;
                 }
             
             })
