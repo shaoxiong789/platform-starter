@@ -2,13 +2,20 @@
     <!-- 素材列表-->
     <div class="comm-wrap news-list">
      <el-tabs type="border-card">
-        <el-tab-pane label="素材列表" >
+        <el-tab-pane label="素材列表" v-loading.body="loading">
             <el-input
                 placeholder="请输入标题"
                 icon="search"
                 v-model="newsTitle"
                 :on-icon-click="search()" style="width:400px;display:inline-block;">
             </el-input>
+            <input type="button"
+                class="el-button el-button--primary el-button--small"
+                v-bind:disabled="false"
+                value="同步"
+                @click="btnSync"  style=""/>
+            总数为{{this.countList.news_count}}条数据
+            <el-progress :percentage="pc" style="width:150px;display:inline-block;"></el-progress>
             <div class="pagination" style="float:right;display:inline-block;">
                 <el-pagination @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
@@ -19,7 +26,7 @@
                 </el-pagination>
             </div>
             
-            <ul class="News-item-list" v-loading.body="loading">
+            <ul class="News-item-list" >
                 <li v-for="item in NewsList" >
                     <input type="radio" @change="select(item)" name="news">选中
                     <span><el-tag type="primary">media_id</el-tag> {{item.media_id}}</span>
@@ -57,7 +64,14 @@ export default {
         currentPage: 1,
         pageSize:6,
         total:100,
-        loading:true
+        countList:0,
+        loading:false,
+        pc:0,
+        sysPage:{
+            currentPage: 1,
+            pageSize:50,
+            total:0,
+        }
       };
     },
     mounted:function(){
@@ -67,7 +81,7 @@ export default {
     },
     methods: {
         init:function(){
-
+            this.getCount();
         },
         loadData(){
             this.loading = true;
@@ -107,6 +121,60 @@ export default {
         },
         select(item){
 
+        },
+        getCount(){
+            this.loading = true;
+            axios.get('api/weixin/news/count')
+            .then((response) =>{
+                console.log(response.data.result);
+                if(response.data.code == 1){
+                    this.countList = response.data.result;
+                    this.total = this.countList.news_count ;
+                    this.sysPage.total = this.countList.news_count;
+                    this.loading = false;
+                }
+                
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+        btnSync(){
+            var num = this.sysPage.total/this.sysPage.pageSize;
+            console.log(num)
+            for(var i = 0; i<num; i++){
+                this.syncData();
+                this.sysPage.currentPage++;
+            }
+             this.loadData() ;
+        },
+        syncData(){
+            this.loading = true;
+            axios.get('api/weixin/sync/news', {
+                params: {
+                    currentPage: this.sysPage.currentPage,
+                    pageSize:this.sysPage.pageSize,
+                }
+            })
+            .then((response) =>{
+                console.log(response.data.result);
+                if(response.data.code == 1){
+                    this.sysPage.total = response.data.result.page.total;
+                   
+                    this.pc = parseInt(this.sysPage.pageSize/this.sysPage.total*100*this.sysPage.currentPage);
+                    if(this.pc>100){
+                         this.pc = Math.min(100,this.pc);
+                    }
+                   
+                    this.loading = false;
+                    console.log(this.sysPage.pageSize/this.sysPage.total,this.pc)
+                   
+                }
+            
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
         
       

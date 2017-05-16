@@ -132,7 +132,7 @@ const menus = [
         path:'manage/wxSync',
         icon:'el-icon-setting',
         component:wxSync,
-        visible:true
+        visible:false
       }
     ]
   },{
