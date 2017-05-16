@@ -1,4 +1,5 @@
 import weixinMenu from './views/manage/menu/menu.vue'
+import wxNewsList from './views/manage/menu/newsList.vue'
 import subscribe from './views/manage/subscribe.vue'
 import daySign from './views/manage/daySign/daySign.vue'
 import daySignDetail from './views/manage/daySign/daySignDetail.vue'
@@ -116,6 +117,13 @@ const menus = [
         path:'manage/subscribe',
         icon:'el-icon-setting',
         component:subscribe,
+        visible:true
+      },
+      {
+        name:'素材列表',
+        path:'manage/newsList',
+        icon:'el-icon-setting',
+        component:wxNewsList,
         visible:true
       }
     ]

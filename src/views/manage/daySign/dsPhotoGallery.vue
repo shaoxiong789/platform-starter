@@ -105,8 +105,5 @@ import axios from 'axios';
 .comm-wrap{
     padding:20px 0;
 }
- .upload{
-     width:500px;
-     margin:30px 0;
- }
+
 </style>
