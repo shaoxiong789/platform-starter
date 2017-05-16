@@ -1,5 +1,6 @@
 import weixinMenu from './views/manage/menu/menu.vue'
 import wxNewsList from './views/manage/menu/newsList.vue'
+import wxSync from './views/manage/menu/newsSync.vue'
 import subscribe from './views/manage/subscribe.vue'
 import daySign from './views/manage/daySign/daySign.vue'
 import daySignDetail from './views/manage/daySign/daySignDetail.vue'
@@ -124,6 +125,13 @@ const menus = [
         path:'manage/newsList',
         icon:'el-icon-setting',
         component:wxNewsList,
+        visible:true
+      },
+      {
+        name:'微信图文素材同步',
+        path:'manage/wxSync',
+        icon:'el-icon-setting',
+        component:wxSync,
         visible:true
       }
     ]
