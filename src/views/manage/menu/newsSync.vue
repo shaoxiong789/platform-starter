@@ -72,9 +72,9 @@ export default {
                 if(response.data.code == 1){
                     this.total = response.data.result.page.total;
                    
-                    this.pc = parseInt(this.pageSize/this.total)*100*parseInt(this.currentPage);
+                    this.pc = parseInt(this.pageSize/this.total*100*this.currentPage);
                     this.loading = false;
-                    console.log(this.pageSize,this.total,this.pc)
+                    console.log(this.pageSize/this.total,this.pc)
                 }
             
             })
