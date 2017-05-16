@@ -22,15 +22,18 @@
             <ul class="News-item-list" v-loading.body="loading">
                 <li v-for="item in NewsList" >
                     <input type="radio" @change="select(item)" >选中
-                    <span>media_id: {{item.media_id}}</span>
-                    <span class="gray">更新于：{{item.update_time| Datefilter}}</span>
+                    <span><el-tag type="primary">media_id</el-tag> {{item.media_id}}</span>
+                    <span class="gray"><el-tag type="primary">更新时间</el-tag> {{item.update_time| Datefilter}}</span>
                     <dl>
-                        <dt><a v-bind:href="item.content.news_item.url" alt="" target="_black">{{item.content.news_item.title}}</a></dt>
+                        <dt><el-tag type="primary">图文标题</el-tag> {{item.content.news_item.title}}</a></dt>
                         <dd>
-                             <img :src="item.content.news_item.thumb_url" style="height:200px;">
+                             <img :src="item.content.news_item.thumb_url" style="height:150px;">
                         </dd>
-                        <dd>{{item.content.news_item.digest}}</dd>
+                        <dd><el-tag type="primary">图文简介</el-tag> {{item.content.news_item.digest}}</dd>
                     </dl>
+                    <span class="bgPreview">
+                        <a v-bind:href="item.content.news_item.url" alt="" target="_black">预览文章</a>
+                    </span>   
                 </li>
             </ul> 
 
@@ -121,15 +124,28 @@ export default {
     color:#999;
 }
 .News-item-list{
-
+    width:1000px;
+    margin:0;
+    padding:0;
+    overflow:hidden;
 }
 .News-item-list li{
+    position:relative;
+    top:0;
+    left:0;
     width:30%;
-    display:inline-block;
+    height:400px;
+    float:left;
+    display:block;
     border:1px solid #ddd;
     margin:1%;
     color:#999;
     vertical-align:top;
+    box-shadow:1px 1px 1px 1px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.News-item-list li:hover .bgPreview{
+     display:block;
 }
 .News-item-list li>span{
      display:block;
@@ -142,17 +158,36 @@ export default {
     display:inline-block;
 }
 .News-item-list li dl{
-    padding:10px;
+    padding:5px 10px;
+    margin:0;
 }
 .News-item-list li dd,.News-item-list li dt{
     display:block;
     padding:0;
     margin:0;
 }
-.News-item-list li dt a{
-    font-size:16px;
-    color:#555;
-    text-decoration: underline;
+
+.News-item-list li>span.bgPreview{
+    display:none;
+    position:absolute;
+     bottom:0;
+     left:0;
+     width:100%;
+     height:90%;
+     background:rgba(0,0,0,0.6);
+}
+.News-item-list li>span.bgPreview a{
+    display:block;
+    font-size:34px;
+    line-height:300px;
+    color:orange;
+    text-align:center;
+}
+.News-item-list li dt{
+    /*font-size:1px;*/
+}
+.News-item-list li dd{
+    color:#999;
 }
 .News-item-list li dt a:hover{
     color:orange;
