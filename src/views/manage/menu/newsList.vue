@@ -9,6 +9,12 @@
                 v-model="newsTitle"
                 :on-icon-click="search()" style="width:400px;display:inline-block;">
             </el-input>
+            <input type="button"
+                class="el-button el-button--primary el-button--small"
+                v-bind:disabled="false"
+                value="同步"
+                @click="sync"  style=""/>
+            总数为{{this.countList.news_count}}
             <div class="pagination" style="float:right;display:inline-block;">
                 <el-pagination @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
@@ -57,7 +63,8 @@ export default {
         currentPage: 1,
         pageSize:6,
         total:100,
-        loading:true
+        loading:true,
+        countList:""
       };
     },
     mounted:function(){
@@ -67,7 +74,8 @@ export default {
     },
     methods: {
         init:function(){
-            // this.loadData();
+            this.getCount();
+            this.sync();
         },
         loadData(){
             // this.loading = true;
@@ -88,7 +96,7 @@ export default {
                
             })
             .catch(function (error) {
-                // console.log(error);
+                console.log(error);
             });
             
         },
@@ -98,14 +106,47 @@ export default {
         },
         handleCurrentChange(val) {
             this.currentPage = val;
-            // console.log(`当前页: ${val}`);
+            console.log(`当前页: ${val}`);
             this.loadData();
         },
         search(){
-            this.loadData();
+            // debugger //bug  一只调用
+            // this.loadData();
         },
         select(item){
 
+        },
+        sync(){
+            axios.get('api/weixin/sync/news', {
+                params: {
+                    currentPage: this.currentPage,
+                    pageSize:this.pageSize,
+                }
+            })
+            .then((response) =>{
+                console.log(response.data.result);
+                if(response.data.code == 1){
+                    this.total = response.data.result.total;
+                }
+               
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+        getCount(){
+            axios.get('api/weixin/news/count')
+            .then((response) =>{
+                console.log(response.data.result);
+                if(response.data.code == 1){
+                    this.countList = response.data.result;
+                    // this.total = this.countList ;
+                }
+               
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
       
     },
