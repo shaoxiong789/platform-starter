@@ -21,7 +21,7 @@
             
             <ul class="News-item-list" v-loading.body="loading">
                 <li v-for="item in NewsList" >
-                    <input type="radio" @change="select(item)" >选中
+                    <input type="radio" @change="select(item)" name="news">选中
                     <span><el-tag type="primary">media_id</el-tag> {{item.media_id}}</span>
                     <span class="gray"><el-tag type="primary">更新时间</el-tag> {{item.update_time| Datefilter}}</span>
                     <dl>
