@@ -31,7 +31,7 @@ export default {
     return {
         pc:0,
         currentPage: 1,
-        pageSize:20,
+        pageSize:50,
         total:0,
         loading:true,
         countList:0,
@@ -41,6 +41,7 @@ export default {
   mounted() {
     this.$nextTick(function () {
         this.getCount();
+        this.sync();
     });
   },
   methods:{
@@ -69,10 +70,11 @@ export default {
             .then((response) =>{
                 console.log(response.data.result);
                 if(response.data.code == 1){
-                    this.total = response.data.result.total;
-                    console.log(this.pageSize,this.total)
-                    this.pc = this.pc + parseInt(this.pageSize/this.total)*100;
+                    this.total = response.data.result.page.total;
+                   
+                    this.pc = parseInt(this.pageSize/this.total)*100*parseInt(this.currentPage);
                     this.loading = false;
+                    console.log(this.pageSize,this.total,this.pc)
                 }
             
             })
