@@ -7,7 +7,7 @@
                 placeholder="请输入标题"
                 icon="search"
                 v-model="newsTitle"
-                :on-icon-click="search()" style="width:400px;display:inline-block;">
+                :on-icon-click="search" style="width:400px;display:inline-block;">
             </el-input>
             <input type="button"
                 class="el-button el-button--primary el-button--small"
@@ -25,7 +25,7 @@
                             :total="total">
                 </el-pagination>
             </div>
-            
+
             <ul class="News-item-list" >
                 <li v-for="item in NewsList" >
                     <input type="radio" @change="select(item)" name="news">选中
@@ -40,16 +40,16 @@
                     </dl>
                     <span class="bgPreview">
                         <a v-bind:href="item.content.news_item.url" alt="" target="_black">预览文章</a>
-                    </span>   
+                    </span>
                 </li>
-            </ul> 
+            </ul>
 
 
 
         </el-tab-pane>
 
-        
-    </el-tabs>   
+
+    </el-tabs>
 
     </div>
 </template>
@@ -82,10 +82,11 @@ export default {
     methods: {
         init:function(){
             this.getCount();
+            this.loadData();
         },
         loadData(){
             this.loading = true;
-            axios.get('api/weixin/news/list', {
+            axios.get('/api/weixin/news/list', {
                 params: {
                     currentPage: this.currentPage,
                     pageSize:this.pageSize,
@@ -99,12 +100,12 @@ export default {
                      this.total = response.data.result.page.total;
                      this.loading = false;
                 }
-               
+
             })
             .catch(function (error) {
                 console.log(error);
             });
-            
+
         },
         handleSizeChange(val) {
           //console.log(`每页 ${val} 条`);
@@ -116,6 +117,8 @@ export default {
             this.loadData();
         },
         search(){
+          console.log('11')
+          this.loadData()
             // debugger //bug  一只调用
             // this.loadData();
         },
@@ -124,7 +127,7 @@ export default {
         },
         getCount(){
             this.loading = true;
-            axios.get('api/weixin/news/count')
+            axios.get('/api/weixin/news/count')
             .then((response) =>{
                 console.log(response.data.result);
                 if(response.data.code == 1){
@@ -133,7 +136,7 @@ export default {
                     this.sysPage.total = this.countList.news_count;
                     this.loading = false;
                 }
-                
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -150,7 +153,7 @@ export default {
         },
         syncData(){
             this.loading = true;
-            axios.get('api/weixin/sync/news', {
+            axios.get('/api/weixin/sync/news', {
                 params: {
                     currentPage: this.sysPage.currentPage,
                     pageSize:this.sysPage.pageSize,
@@ -160,24 +163,24 @@ export default {
                 console.log(response.data.result);
                 if(response.data.code == 1){
                     this.sysPage.total = response.data.result.page.total;
-                   
+
                     this.pc = parseInt(this.sysPage.pageSize/this.sysPage.total*100*this.sysPage.currentPage);
                     if(this.pc>100){
                          this.pc = Math.min(100,this.pc);
                     }
-                   
+
                     this.loading = false;
                     console.log(this.sysPage.pageSize/this.sysPage.total,this.pc)
-                   
+
                 }
-            
+
             })
             .catch(function (error) {
                 console.log(error);
             });
         }
-        
-      
+
+
     },
     filters:{
         Datefilter:function(value){
