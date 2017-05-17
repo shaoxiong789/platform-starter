@@ -69,7 +69,7 @@ export default {
         pc:0,
         sysPage:{
             currentPage: 1,
-            pageSize:50,
+            pageSize:10,
             total:0,
         }
       };
@@ -143,16 +143,11 @@ export default {
             });
         },
         btnSync(){
-            var num = this.sysPage.total/this.sysPage.pageSize;
-            console.log(num)
-            for(var i = 0; i<num; i++){
-                this.syncData();
-                this.sysPage.currentPage++;
-            }
-             this.loadData() ;
+            this.sysPage.currentPage = 1;
+            this.syncData();
         },
         syncData(){
-            this.loading = true;
+            // this.loading = true;
             axios.get('/api/weixin/sync/news', {
                 params: {
                     currentPage: this.sysPage.currentPage,
@@ -171,7 +166,17 @@ export default {
 
                     this.loading = false;
                     console.log(this.sysPage.pageSize/this.sysPage.total,this.pc)
-
+                    console.log(Number(response.data.result.page.currentPage)+1,Math.ceil(this.sysPage.total/this.sysPage.pageSize))
+                    if(this.sysPage.currentPage<Math.ceil(this.sysPage.total/this.sysPage.pageSize)){
+                      this.sysPage.currentPage = Number(response.data.result.page.currentPage)+1;
+                      this.$nextTick(function(){
+                        this.syncData();
+                      });
+                    }else{
+                      this.$nextTick(function(){
+                        this.loadData();
+                      });
+                    }
                 }
 
             })
