@@ -123,10 +123,7 @@ export default {
             this.loadData();
         },
         search(){
-          console.log('11')
           this.loadData()
-            // debugger //bug  一只调用
-            // this.loadData();
         },
         select(item){
 
@@ -154,7 +151,6 @@ export default {
             this.syncData();
         },
         syncData(){
-            // this.loading = true;
             axios.get('/api/weixin/sync/news', {
                 params: {
                     currentPage: this.sysPage.currentPage,
