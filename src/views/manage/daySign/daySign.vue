@@ -34,6 +34,7 @@
 </template>
 <script>
 import moment from 'moment';
+import axios from 'axios';
 
 let demoEvents = [
   {
@@ -53,8 +54,9 @@ var daySign = {
 export default {
   data() {
     return {
-      start: "",
-      systemDay: "2017-4-1",//系统创建日期
+      startDay: "",
+      endDay:"",
+      systemDay: new Date(),//系统创建日期
       currentDay: new Date(),
       fcEvents: demoEvents
     }
@@ -69,10 +71,9 @@ export default {
   },
   methods: {
     'changeMonth'(start, end, current) {
-      this.start = start;
-      this.mockData();
-      // console.log('changeMonth',start, end, current)
-      // console.log('changeMonth', start.format(), end.format(), current.format())
+      this.startDay = start;
+      this.endDay = end;
+      this.loadDaySignList();
     },
     'eventClick'(event, jsEvent, pos) {
       //  console.log('eventClick', event, jsEvent, pos)
@@ -116,6 +117,37 @@ export default {
     },
     'moreClick'(day, events, jsEvent) {
       // console.log('moreCLick', moment(day).format("YYYY-MM-DD hh:mm"), events, jsEvent)
+    },
+    loadDaySignList(){
+      console.log(this.startDay,this.endDay)
+      axios.get('api/clock/calendar/list',{
+            params:{
+                startDay:this.startDay,
+                endDay:this.endDay
+              }
+          })
+          .then((response) =>{
+              // console.log(response.data.result)
+              if(response.data.code == 1&&response.status==200){
+                  this.createFcEvent(response.data.result);
+              }
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+      
+    },
+    createFcEvent(dateList){
+       this.fcEvents = [];
+      for(var i = 0; i< dateList.length ; i++){
+        this.fcEvents.push({
+          title: '完成',
+          start:  moment(dateList[i].day).format("YYYY-MM-DD"),
+          end: moment(dateList[i].day).format("YYYY-MM-DD"),
+          cssClass: 'done'
+        })
+      }
+        
     },
     mockData() {
       this.fcEvents = [];

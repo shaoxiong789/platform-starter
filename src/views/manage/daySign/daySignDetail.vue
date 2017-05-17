@@ -22,20 +22,22 @@
                 <el-form label-width="80px"
                          :model="daySign">
                     <el-form-item>
-                        <el-tag type="success">{{daySign.morning.name}}</el-tag>
+                        <el-tag type="success">早起打卡</el-tag>
                     </el-form-item>
-                    <el-form-item label="早安美图">
-                        <el-input v-model="daySign.morning.bg" readonly></el-input>
+                    <el-form-item label="早安美图*">
+                        <el-input v-model="daySign.morning.bg" readonly  ></el-input>
                     </el-form-item>
-                    <el-form-item label="早安一言">
+                    <el-form-item label="早安一言*">
                         <el-input v-model="daySign.morning.word.text"></el-input><span class="tip">（限制30个字符）</span>
                     </el-form-item>
-                    <el-form-item label="一言布局">
+                    <el-form-item label="一言布局*">
                         <el-row>
                             <el-col :span="11">
                                 font-size :
                                 <input type="number"
                                        class="comm-input"
+                                       min = "12"
+                                       max = "60"
                                        v-model="daySign.morning.word.fontSize"> px
                             </el-col>
                             <el-col :span="11">
@@ -48,12 +50,14 @@
                                 position.X :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.morning.word.x"> px
                             </el-col>
                             <el-col :span="11">
                                 position.Y :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.morning.word.y"> px
                             </el-col>
                         </el-row>
@@ -64,7 +68,6 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <span class="tip">{{msg1}}</span>
                     </el-form-item>
                 </el-form>
             </div>
@@ -81,22 +84,23 @@
                 <el-form label-width="80px"
                          :model="daySign">
                     <el-form-item>
-                        <el-tag type="warning">{{daySign.night.name}}</el-tag>
+                        <el-tag type="warning">晚安打卡</el-tag>
                     </el-form-item>
-                                   <!--"-->
 
-                    <el-form-item label="晚安美图">
+                    <el-form-item label="晚安美图*">
                         <el-input v-model="daySign.night.bg" readonly></el-input>
                     </el-form-item>
-                    <el-form-item label="晚安一言">
+                    <el-form-item label="晚安一言*">
                         <el-input v-model="daySign.night.word.text"></el-input><span class="tip">（限制30个字符）</span>
                     </el-form-item>
-                    <el-form-item label="一言布局">
+                    <el-form-item label="一言布局*">
                         <el-row>
                             <el-col :span="11">
                                 font-size :
                                 <input type="number"
                                        class="comm-input"
+                                       min = "0"
+                                       max = "60"
                                        v-model="daySign.night.word.fontSize"> px
                             </el-col>
                             <el-col :span="11">
@@ -109,12 +113,14 @@
                                 position.X :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.night.word.x"> px
                             </el-col>
                             <el-col :span="11">
                                 position.Y :
                                 <input type="text"
                                        class="comm-input"
+                                       min = "0"
                                        v-model="daySign.night.word.y"> px
                             </el-col>
                         </el-row>
@@ -125,7 +131,6 @@
                                v-bind:disabled="false"
                                value="预览"
                                @click="preview" />
-                        <span class="tip">{{msg2}}</span>
                     </el-form-item>
 
                 </el-form>
@@ -137,12 +142,12 @@
                 v-model="nightImg"
                 ></img-upload>
             </div>
+            <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
         </div>
+
         <br>
         <el-button type="success"
                 @click="save()">保存</el-button>
-        <canvas id="convertbase64" width="640" height="500" style="width:640px;height:500px; display:none;"></canvas>
-
 
     </div>
 </template>
@@ -156,36 +161,31 @@ export default {
         return {
             imgBaseURl:"http://oo8xbcend.bkt.clouddn.com/",
             day: '',
-            msg1: "",
-            msg2: "",
             daySign: {
                 id: "",
                 day: "",
                 morning: {
-                    name: "早起打卡",
                     bg: "",
                     word: {
                         text: "",
-                        fontSize: 0,
+                        fontSize: 12,
                         color: "#FFFFFF",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     }
                 },
                 night: {
-                    name: "晚安打卡",
                     bg: "",
                     word: {
                         text: "",
-                        fontSize: 0,
+                        fontSize: 12,
                         color: "#FFFFFF",//默认 #fff
                         x: 0,//默认  0
                         y: 0
                     }
                 }
             },
-            file:{},
-            images:[]
+            file:{}
         }
     },
     computed:{
@@ -224,7 +224,6 @@ export default {
     async created() {
         this.getDate();
         await this.getDaySign();
-
     },
     watch: {
         // 'radio'(val, oldVal) {
@@ -239,10 +238,9 @@ export default {
               day: moment(this.$route.query.day).format("YYYY-MM-DD")
             }
           });
-          if(response.status==200){
+          if(response.status==200 && response.data.code==1){
             // console.log("response",response)
-            if(response.data.code==1){
-              var daySign = response.data.result;
+             var daySign = response.data.result;
               this.daySign.id = daySign._id;
               this.daySign.day = daySign.day;
               if(daySign.morning){
@@ -256,19 +254,18 @@ export default {
                 }
               }
               if(daySign.night){
-                this.daySign.night.bg = daySign.night.bg;
-                if(daySign.night.word){
-                  //this.daySign.night.word = daySign.morning.word ;
-                  this.daySign.night.word.text = daySign.night.word.text;
-                  this.daySign.night.word.fontSize = daySign.night.word.fontSize;
-                  this.daySign.night.word.color = daySign.night.word.color;
-                  this.daySign.night.word.x = daySign.night.word.x;
-                  this.daySign.night.word.y = daySign.night.word.y;
-                }
+                   this.daySign.night = daySign.night;
+                   this.daySign.night.bg = daySign.night.bg;
+                   if(daySign.night.word){
+                        this.daySign.night.word = daySign.morning.word ;
+                        this.daySign.night.word.text = daySign.night.word.text;
+                        this.daySign.night.word.fontSize = daySign.night.word.fontSize;
+                        this.daySign.night.word.color = daySign.night.word.color;
+                        this.daySign.night.word.x = daySign.night.word.x;
+                        this.daySign.night.word.y = daySign.night.word.y;
+                    }
               }
-
               // this.daySign = response.data.result
-            }
           }
         },
         getDate() {
@@ -279,71 +276,62 @@ export default {
         goBack() {
             this.$router.go(-1);
         },
-        openWarning() {
-            this.$confirm('切换早晚将清除未保存设置, 是否保存?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
+        verify(){
+            if(this.daySign.morning.bg == "" || this.daySign.morning.word.text == ""|| this.daySign.night.bg == "" || this.daySign.night.word.text == ""){
                 this.$message({
-                    type: 'success',
-                    message: '保存成功!'
+                    type: 'warning',
+                    message: '填写信息不完整 '
                 });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消保存 '
-                });
-            });
-            //非自动保存 不然如何预览
+                return false;
+            }
+            return true;
         },
-        preview(flag) {
-            //点击预览 报错 出现友情提示 msg1 msg1
-            this.msg1 = "友情提示：缺少背景图"; //必须
-            this.msg2 = "友情提示：缺少每日名言"
+        preview(){
+
         },
         save() {
-            axios.post('/api/clock/calendar/save', this.daySign)
-            .then( (response) => {
-              if(response.data.code == 1){
-                this.$notify({
-                  title: '',
-                  message: '日签图片设置成功',
-                  type: 'success'
-                });
-              }
-            })
-            .catch( (error) => {
-                console.log(error);
-            });
-        },
-        validate(){
-
+            if(this.verify()){
+                axios.post('/api/clock/calendar/save', this.daySign)
+                    .then( (response) => {
+                    if(response.data.code == 1){
+                        this.$notify({
+                            title: '',
+                            message: '日签图片设置成功',
+                            type: 'success'
+                        });
+                    }
+                    })
+                    .catch( (error) => {
+                        console.log(error);
+                    });
+            }
+            
         },
         uploadChangeMorning(imgData,change){
           var param = new FormData();
           param.append('img',imgData);
           axios.post('/api/imager/upload/',param)
-          .then( (response)=> {
-            if(response.data.code == 1){
-              this.daySign.morning.bg = this.imgBaseURl + response.data.result.pathname
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
+                .then( (response)=> {
+                    if(response.data.code == 1){
+                    this.daySign.morning.bg = this.imgBaseURl + response.data.result.pathname
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
         },
         uploadChangeNight(imgData,change){
           var param = new FormData();
           param.append('img',imgData);
           axios.post('/api/imager/upload/',param)
-          .then( (response)=> {
-            if(response.data.code == 1){
-              this.daySign.night.bg = this.imgBaseURl + response.data.result.pathname
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
+                .then( (response)=> {
+                    if(response.data.code == 1){
+                    this.daySign.night.bg = this.imgBaseURl + response.data.result.pathname
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
         }
+
     }
 }
 </script>
@@ -351,38 +339,31 @@ export default {
 .ds-wrap {
     padding: 20px 0;
 }
-
 .el-form-item label {
     /*line-height:36px!important;*/
 }
-
 .ds-item {
     /*width:48%;
     display:inline-block;*/
     overflow: hidden;
     clear: both;
 }
-
 .comm-input {
-    width: 30px;
+    width: 40px;
     border-radius: 4px;
     border: 1px solid #bfcbd9;
     box-sizing: border-box;
 }
-
 .el-color-picker__trigger {
     border: none;
 }
-
 .ds-item .el-form-item {
     margin-bottom: 0px!important;
 }
-
 .ds-setting {
     width: 50%;
     float: left;
 }
-
 .day-info {
     font-size: 16px;
     display: inline-block;
@@ -391,16 +372,17 @@ export default {
     margin-left:10%;
     margin-bottom: 10px;
 }
-
 .ds-preview {
     width: 42%;
     float: right;
     padding-left: 8%;
 }
-
 .ds-pw-img {
     width: 320px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
+}
+.colored{
+    border:1px solid red;
 }
 </style>

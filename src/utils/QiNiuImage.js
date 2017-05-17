@@ -35,7 +35,7 @@ function TextUrlBuilder(host){
     return this;
   }
   this.font = (value)=>{
-    this.data.font = new String(base64.encode(value).replace(/\//g, '_').replace(/\+/g, '-'));
+    this.data.font = new String(value);
     return this;
   }
   this.fontSize = (value)=>{
@@ -43,7 +43,7 @@ function TextUrlBuilder(host){
     return this;
   }
   this.fill = (value)=>{
-    this.data.fill = new String(base64.encode(value).replace(/\//g, '_').replace(/\+/g, '-'));
+    this.data.fill = new String(value);
     return this;
   }
   this.dissolve = (value)=>{
