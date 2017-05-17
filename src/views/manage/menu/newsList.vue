@@ -9,11 +9,8 @@
                 v-model="newsTitle"
                 :on-icon-click="search" style="width:400px;display:inline-block;">
             </el-input>
-            <input type="button"
-                class="el-button el-button--primary el-button--small"
-                v-bind:disabled="false"
-                value="同步"
-                @click="btnSync"  style=""/>
+            <el-button type="primary" :disabled="syncing"
+                @click="btnSync"  style="">同步</el-button>
             总数为{{this.countList.news_count}}条数据
             <el-progress :percentage="pc" style="width:150px;display:inline-block;"></el-progress>
             <div class="pagination" style="float:right;display:inline-block;">
@@ -43,7 +40,15 @@
                     </span>
                 </li>
             </ul>
-
+            <div class="pagination" style="float:right;display:inline-block;">
+                <el-pagination @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-size="pageSize"
+                            layout="total,prev, pager, next, jumper"
+                            :total="total">
+                </el-pagination>
+            </div>
 
 
         </el-tab-pane>
@@ -66,6 +71,7 @@ export default {
         total:100,
         countList:0,
         loading:false,
+        syncing:false,
         pc:0,
         sysPage:{
             currentPage: 1,
@@ -143,6 +149,7 @@ export default {
             });
         },
         btnSync(){
+            this.syncing = true;
             this.sysPage.currentPage = 1;
             this.syncData();
         },
@@ -174,6 +181,7 @@ export default {
                       });
                     }else{
                       this.$nextTick(function(){
+                        this.syncing = false;
                         this.loadData();
                       });
                     }
