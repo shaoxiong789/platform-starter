@@ -200,7 +200,7 @@
                                   <i class="icon36_common add_gray"></i>
 	                                <strong>新建图文消息</strong>
                                 </a>
-			                         </span>
+			                 </span>
                             </div>
                           </div>
                           <div id="msgSender_media_5_10">

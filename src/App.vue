@@ -12,7 +12,7 @@
       margin: 0;
   }
   a,a:hover,a:active{
-    color:#fff;
+    <!--color:#fff;-->
     text-decoration: none;
   }
 </style>
