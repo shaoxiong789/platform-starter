@@ -2,7 +2,7 @@
 <!-- (仿)微信自定义菜单后台 -->
 <div class="menu_setting_box js_menuBox dn" style="display: block;">
     <!--<textarea id="result" style="border: none;position: absolute;width: 317px;height: 462px;left: 31px;top: 79px;z-index: 2;word-break: break-all;"></textarea>-->
-    <div class="highlight_box border icon_wrap menu_setting_msg js_menustatus dn" id="menustatus_1" style="display: none;">
+    <!--<div class="highlight_box border icon_wrap menu_setting_msg js_menustatus dn" id="menustatus_1" style="display: none;">
         <i class="icon icon icon_msg_small success"></i>
         <p class="title">菜单使用中</p>
         <p class="desc">可在手机查看菜单内容。若停用菜单，请<a href="/cgi-bin/plugindetails?t=service/profile&amp;pluginid=10007&amp;action=intro&amp;token=1849635325&amp;lang=zh_CN" class="js_closeMenu">点击这里</a></p>
@@ -59,7 +59,7 @@
                 <p>你已授权给<span class="js_auth_name"></span>帮助你运营公众号，点击管理<a href="/cgi-bin/component_unauthorize?action=list&amp;t=service/auth_plugins&amp;token=1849635325&amp;lang=zh_CN">已授权的第三方平台</a></p>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="menu_setting_area js_editBox">
         <div class="menu_preview_area">
             <div class="mobile_menu_preview">
@@ -69,7 +69,7 @@
                 <div class="mobile_bd">
                     <ul class="pre_menu_list grid_line ui-sortable ui-sortable-disabled no_menu" style="z-index:3;" id="menuList">
                         <li v-for="(btn,index) in menu.button" :key="btn.id" class="jsMenu pre_menu_item grid_item jslevel1 size1of3 ui-sortable ui-sortable-disabled">
-                                <a href="javascript:void(0);" @click="menu_selected(btn.name,index)" :class="[{pre_menu_link: index===activeMenuIndex && activeMenuType()==1}]" draggable="false">
+                            <a href="javascript:void(0);" @click="menu_selected(btn.name,index)" :class="[{pre_menu_link: index===activeMenuIndex && activeMenuType()==1}]" draggable="false">
                                 <i class="icon_menu_dot js_icon_menu_dot dn"></i>
                                 <i class="icon20_common sort_gray"></i>
                                 <span class='js_l1Title'>{{ btn.name }}</span>
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="menu_form_area">
-            <div id="js_none" class="menu_initial_tips tips_global" style="display: none;"></div>
+            <div id="js_none" class="menu_initial_tips tips_global" style="display: none;" v-show="!(activeMenuIndex > 0 || activeMenuIndex === 0 || activeMenuItemIndex > 0 || activeMenuIndex === 0 )">点击左侧菜单进行编辑操作</div>
             <div id="js_rightBox" class="portable_editor to_left"  style="display: none;" v-show="activeMenuIndex > 0 || activeMenuIndex === 0 || activeMenuItemIndex > 0 || activeMenuIndex === 0 ">
                 <div class="editor_inner">
                     <div class="global_mod float_layout menu_form_hd js_second_title_bar">
@@ -248,7 +248,6 @@ export default {
         data () {
                 return {
                     "gzh_name":'自控力lab',
-                   // "menu":{"button":[{"type":"view","name":"今日歌曲","key":"V1001_TODAY_MUSIC","url":"","sub_button":[]},{"type":"click","name":"歌手简介","key":"V1001_TODAY_SINGER","sub_button":[]},{"name":"菜单","sub_button":[{"type":"view","name":"搜索","url":"http://www.soso.com/","sub_button":[]},{"type":"view","name":"视频","url":"http://v.qq.com/","sub_button":[]},{"type":"click","name":"赞一下我们","key":"V1001_GOOD","sub_button":[]}]}]},
                     "menu":{
                         // "button":[
                         //     {"type":"click","name":"歌手简介","key":"V1001_TODAY_SINGER","url":"","sub_button":[]},
@@ -346,7 +345,6 @@ export default {
                             }
                         ]                        
                     },
-                  //  "menu":{'button':[]},
                     "new_menu":{'button':[]},
                     "activeMenuName":'',
                     "activeMenuIndex":'',
@@ -359,10 +357,16 @@ export default {
             },
         mounted:function(){
             this.$nextTick(function(){
-            //    menu_selected(btn.name,index)
+                //  menu_selected(btn.name,index)
+                this.init();
             })
         },
         methods:{
+            init(){
+                //初始化默认点击 点击第一个一级菜单
+                var $firstMenu1 = document.querySelector('.pre_menu_list a');
+                return $firstMenu1.click();
+            },
             menu_data_completing () {
                 // return false;
                 for(var i=0;i<this.menu.button.length;i++){
