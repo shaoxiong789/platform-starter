@@ -276,22 +276,20 @@
     </div>
   </div>
   <div class="tool_bar tc js_editBox" style="width:300px;margin-left:30px;">
-    <span id="pubBt" class="btn btn_input btn_primary" style="display: block;font-size:20px;padding:5px 22px;" @click="saveData()"><button>保存并发布</button></span>
+    <span id="pubBt" class="btn btn_input btn_primary" style="display: block;font-size:20px;padding:5px 22px;" @click="saveMunu()">
+      <button>保存并发布</button>
+    </span>
     <!--<a href="javascript:void(0);" class="btn btn_default" id="viewBt" style="display: block;">预览</a>-->
   </div>
 </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
   name: 'wxmenu',
   data() {
     return {
       "gzh_name": '自控力lab',
-      "menu": {
-        "button": [{
-          "name": "块看"
-        }]
-      },
       "menu": {
         "button": [{
             "name": "快看",
@@ -380,13 +378,32 @@ export default {
       "showMenuContentMsgType": '' //1:图文信息 2:图片 3:语音 4:视频
     }
   },
-  mounted: function() {
+  mounted() {
     this.$nextTick(function() {
+      this.initMunu();
       //  menu_selected(btn.name,index)
       this.init();
     })
   },
   methods: {
+    initMunu() {
+      axios.get('/api/weixin/menu/detail').then((response)=>{
+
+        this.menu = response.data.result.menu;
+      });
+    },
+    saveMunu() {
+      console.log(this.menu)
+      axios.post('/api/weixin/menu/save',this.menu).then((response)=>{
+        if(response.data.code == 1){
+            this.$notify({
+                title: '',
+                message: '菜单保存成功',
+                type: 'success'
+            });
+        }
+      });
+    },
     init() {
       //初始化默认点击 点击第一个一级菜单
       var $firstMenu1 = document.querySelector('.pre_menu_list a');
